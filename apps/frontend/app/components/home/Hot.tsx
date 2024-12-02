@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { FaSpinner } from "react-icons/fa";
 import {
   InputOTP,
   InputOTPGroup,
@@ -8,6 +9,8 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp";
 import { Button } from "@/components/ui/button";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 const CRYPTO_SYMBOLS = [
   "BTC_USDC",
@@ -34,6 +37,69 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
     }[]
   >([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [loading, setLoading] = useState(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+  const [email, setEmail] = useState("");
+
+  const backendUrl = "http://localhost:3121";
+
+  const emailForm = useFormik({
+    initialValues: {
+      email: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email format")
+        .required("Email is Required"),
+    }),
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        setLoading(true);
+        setEmail(values.email);
+        const res = await axios.post(`${backendUrl}/auth/signup`, {
+          email: values.email,
+        });
+        if (res.status === 200) {
+          setLoading(false);
+          resetForm();
+          openModal();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  });
+  const otpForm = useFormik({
+    initialValues: {
+      otp: "",
+    },
+    validationSchema: Yup.object({
+      otp: Yup.string()
+        .length(6, "OTP must be exactly 6 digits")
+        .matches(/^[0-9]+$/, "OTP must be numeric")
+        .required("Required"),
+    }),
+    onSubmit: async (values) => {
+      try {
+        setLoading(true);
+        const res = await axios.post(`${backendUrl}/auth/verify-otp`, {
+          email: email,
+          otp: values.otp,
+        });
+        if (res.status === 200) {
+          setEmail("");
+          setOtp("");
+          localStorage.setItem("user", res.data.user);
+          setLoading(false);
+          closeModal();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    },
+  });
 
   useEffect(() => {
     const fetchCryptocurrencyData = async () => {
@@ -93,17 +159,29 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
           </div>
           <div className="flex flex-col items-center pl-3">
             <div className="flex">
-              <input
-                type="text"
-                placeholder="Email/Phone number"
-                className="px-4 py-2 w-72 rounded-l-lg bg-gradient-to-tl from-neutral-700 to-neutral-900 text-white placeholder-gray-400 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-              />
-              <button
-                onClick={() => setIsModalOpen(true)}
-                className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 px-6 py-2 font-semibold rounded-r-lg hover:bg-yellow-500 transition duration-300"
-              >
-                Sign Up
-              </button>
+              <form onSubmit={emailForm.handleSubmit}>
+                <input
+                  type="text"
+                  name="email"
+                  placeholder="Enter Your Email"
+                  value={emailForm.values.email}
+                  onChange={emailForm.handleChange}
+                  onBlur={emailForm.handleBlur}
+                  className="px-4 py-2 w-72 rounded-l-lg bg-gradient-to-tl from-neutral-700 to-neutral-900 text-white placeholder-gray-400 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                />
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 px-6 py-2 font-semibold rounded-r-lg hover:bg-yellow-500 transition duration-300"
+                >
+                  {loading ? "Submitting..." : "Sign Up"}
+                </button>
+                {emailForm.touched.email && emailForm.errors.email ? (
+                  <div className="text-red-500 text-sm mt-1">
+                    {emailForm.errors.email}
+                  </div>
+                ) : null}
+              </form>
             </div>
           </div>
         </section>
@@ -152,23 +230,27 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
       </section>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="bg-neutral-800 text-white w-80 p-6 rounded-lg">
-            <h2 className="text-lg font-semibold mb-4">Enter OTP</h2>
-            <p className="text-sm text-gray-400 mb-4">
-              We've sent a 6-digit OTP to your phone. Please enter it below to
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+          <div className="bg-gradient-to-tr from-neutral-600 to-neutral-800 rounded-lg border border-gray-600 w-80 p-6">
+            <h2 className="text-lg font-semibold mb-4 text-yellow-400">
+              Enter OTP
+            </h2>
+            <p className="text-sm text-white mb-8">
+              We've sent a 6-digit OTP to your email. Please enter it below to
               verify your account.
             </p>
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                // Add OTP validation logic here
-                console.log("OTP submitted");
-                setIsModalOpen(false);
-              }}
+              onSubmit={otpForm.handleSubmit}
               className="flex flex-col items-center gap-4"
             >
-              <InputOTP maxLength={6}>
+              <InputOTP
+                maxLength={6}
+                value={otp}
+                onChange={(value) => {
+                  setOtp(value);
+                  otpForm.setFieldValue("otp", value);
+                }}
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />
@@ -181,16 +263,32 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
                   <InputOTPSlot index={5} />
                 </InputOTPGroup>
               </InputOTP>
-              <Button type="submit" className="w-full">
-                Submit OTP
-              </Button>
+              {otpForm.touched.otp && otpForm.errors.otp ? (
+                <div className="text-red-500 text-sm mt-1">
+                  {otpForm.errors.otp}
+                </div>
+              ) : null}
+              <div className="flex justify-end gap-4">
+                <Button
+                  type="submit"
+                  className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <FaSpinner className="animate-spin mr-2" />
+                  ) : (
+                    "Submit OTP"
+                  )}
+                </Button>
+                <Button
+                  className="bg-gradient-to-br text-black/90 from-gray-400/80 to-gray-600/80 hover:bg-gray-500"
+                  type="button"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </Button>
+              </div>
             </form>
-            <button
-              onClick={() => setIsModalOpen(false)}
-              className="text-sm text-yellow-400 mt-4 hover:underline"
-            >
-              Cancel
-            </button>
           </div>
         </div>
       )}

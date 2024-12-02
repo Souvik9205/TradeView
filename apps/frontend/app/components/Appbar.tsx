@@ -12,15 +12,19 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import OtpModal from "./OtpModal";
 
 export const Appbar = () => {
   const router = useRouter();
   const [wallet, setWallet] = useState(0);
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("user");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
+  const openOtpModal = () => setIsOtpModalOpen(true);
+  const closeOtpModal = () => setIsOtpModalOpen(false);
 
   const initialValues = {
     email: "",
@@ -33,6 +37,7 @@ export const Appbar = () => {
   const handleSubmit = (values: any) => {
     console.log("Form submitted with values:", values);
     closeLoginModal();
+    openOtpModal();
   };
 
   return (
@@ -147,6 +152,8 @@ export const Appbar = () => {
           </div>
         </div>
       )}
+
+      <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} />
     </div>
   );
 };

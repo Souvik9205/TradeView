@@ -76,6 +76,7 @@ const MarketsPage = () => {
     };
 
     fetchTickers();
+    setUser(localStorage.getItem("user") || "");
   }, []);
 
   const handlePageChange = (page: number) => {

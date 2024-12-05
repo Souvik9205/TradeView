@@ -1,24 +1,33 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  getDepth,
-  getKlines,
-  getTicker,
-  getTrades,
-} from "../../[utils]/httpClient";
+import { getDepth } from "../../[utils]/httpClient";
 import { BidTable } from "./BidTable";
 import { AskTable } from "./AskTable";
 import { SignalingManager } from "@/app/[utils]/SignalingManager";
 
-export function Depth({ market }: { market: string }) {
+export function Depth({
+  market,
+  currentPrice,
+}: {
+  market: string;
+  currentPrice: number;
+}) {
   const [bids, setBids] = useState<[string, string][]>();
   const [asks, setAsks] = useState<[string, string][]>();
-  const [price, setPrice] = useState<string>();
+  const [price, setPrice] = useState<number>(currentPrice);
   const [isTradeView, setIsTradeView] = useState(false);
 
   const [askTotal, setAskTotal] = useState(0);
   const [bidTotal, setBidTotal] = useState(0);
+
+  const [tradeData, setTradeData] = useState<
+    { price: string; quantity: string }[]
+  >([]);
+
+  useEffect(() => {
+    setPrice(currentPrice);
+  }, [currentPrice]);
 
   useEffect(() => {
     SignalingManager.getInstance().registerCallback(
@@ -73,7 +82,6 @@ export function Depth({ market }: { market: string }) {
       `DEPTH-${market}`
     );
 
-    // Subscription and cleanup code remains the same
     SignalingManager.getInstance().sendMessage({
       method: "SUBSCRIBE",
       params: [`depth.200ms.${market}`],
@@ -83,9 +91,6 @@ export function Depth({ market }: { market: string }) {
       setBids(d.bids.reverse().filter(([_, quantity]) => quantity !== "0.00"));
       setAsks(d.asks.filter(([_, quantity]) => quantity !== "0.00"));
     });
-
-    getTicker(market).then((t) => setPrice(t.lastPrice));
-    getTrades(market).then((t) => setPrice(t[0].price));
 
     return () => {
       SignalingManager.getInstance().sendMessage({
@@ -99,35 +104,99 @@ export function Depth({ market }: { market: string }) {
     };
   }, [market]);
 
+  useEffect(() => {
+    const tradeCallback = (data: any) => {
+      console.log("Raw WebSocket Data:", data); // Log raw WebSocket data
+      if (data && data.p && data.q) {
+        setTradeData((prev) => [
+          { price: data.p, quantity: data.q },
+          ...(prev || []).slice(0, 19), // Keep last 20 trades
+        ]);
+      } else {
+        console.warn("Unexpected trade data:", data);
+      }
+    };
+
+    SignalingManager.getInstance().registerCallback(
+      "trade",
+      tradeCallback,
+      `TRADE-${market}`
+    );
+
+    SignalingManager.getInstance().sendMessage({
+      method: "SUBSCRIBE",
+      params: [`trade.${market}`],
+    });
+
+    return () => {
+      SignalingManager.getInstance().sendMessage({
+        method: "UNSUBSCRIBE",
+        params: [`trade.${market}`],
+      });
+      SignalingManager.getInstance().deRegisterCallback(
+        "trade",
+        `TRADE-${market}`
+      );
+    };
+  }, [market]);
+
   return (
-    <div className="mx-5">
+    <div className="mx-1 bg-neutral-700/60 justify-between border border-neutral-600 p-2">
       <DepthNav isTradeView={isTradeView} setIsTradeView={setIsTradeView} />
       <div className="w-full flex-col border-slate-700 border-t"></div>
-      {isTradeView ? (
-        <p>trade</p>
-      ) : (
-        <>
-          <TableHeader />
-          <div>
-            {asks && (
-              <AskTable
-                asks={asks}
-                onTotalChange={(total) => setAskTotal(total)}
-              />
-            )}
-            {price && (
-              <div className=" border-white/30 border my-2">{price}</div>
-            )}
-            {bids && (
-              <BidTable
-                bids={bids}
-                onTotalChange={(total) => setBidTotal(total)}
-              />
-            )}
+      <div className="bg-neutral-900/70 text-white border border-gray-500">
+        {isTradeView ? (
+          <TradeView tradeData={tradeData} />
+        ) : (
+          <>
+            <TableHeader />
+            <div>
+              {asks && (
+                <AskTable
+                  asks={asks}
+                  onTotalChange={(total) => setAskTotal(total)}
+                />
+              )}
+              {price && (
+                <div className=" border-white/30 border my-2">{price}</div>
+              )}
+              {bids && (
+                <BidTable
+                  bids={bids}
+                  onTotalChange={(total) => setBidTotal(total)}
+                />
+              )}
+            </div>
+            <BuyerSeller maxBidTotal={bidTotal} maxAskTotal={askTotal} />
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function TradeView({
+  tradeData,
+}: {
+  tradeData: { price: string; quantity: string }[];
+}) {
+  return (
+    <div className="mt-4">
+      <div className="text-sm text-slate-500 flex justify-between mb-2">
+        <span>Price</span>
+        <span>Quantity</span>
+      </div>
+      <div className="max-h-64 overflow-y-auto">
+        {tradeData.map((trade, index) => (
+          <div
+            key={index}
+            className="flex justify-between text-white text-sm py-1"
+          >
+            <span>{trade.price}</span>
+            <span>{trade.quantity}</span>
           </div>
-          <BuyerSeller maxBidTotal={bidTotal} maxAskTotal={askTotal} />
-        </>
-      )}
+        ))}
+      </div>
     </div>
   );
 }

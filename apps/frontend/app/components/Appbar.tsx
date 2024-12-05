@@ -8,18 +8,23 @@ import {
 } from "@/components/ui/tooltip";
 import { FaWallet } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import OtpModal from "./OtpModal";
+import axios from "axios";
+import { useAuthStore } from "../[utils]/AuthStore";
 
 export const Appbar = () => {
   const router = useRouter();
   const [wallet, setWallet] = useState(0);
-  const userId = localStorage.getItem("user");
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
+  const [email, setEmail] = useState("");
+  const { isAuthenticated } = useAuthStore();
+
+  const backendUrl = "http://localhost:3121";
 
   const openLoginModal = () => setIsLoginModalOpen(true);
   const closeLoginModal = () => setIsLoginModalOpen(false);
@@ -34,10 +39,19 @@ export const Appbar = () => {
       .email("Invalid email format")
       .required("Email is required"),
   });
-  const handleSubmit = (values: any) => {
-    console.log("Form submitted with values:", values);
-    closeLoginModal();
-    openOtpModal();
+  const handleSubmit = async (values: any) => {
+    try {
+      const res = await axios.post(`${backendUrl}/auth/signin`, {
+        email: values.email,
+      });
+      if (res.status === 200) {
+        setEmail(values.email);
+        closeLoginModal();
+        openOtpModal();
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -74,7 +88,7 @@ export const Appbar = () => {
                 </TooltipContent>
               </Tooltip>
 
-              {userId ? (
+              {isAuthenticated ? (
                 <div>
                   <div onClick={() => router.push("/dashboard/user")}>
                     <div className="bg-white/20 rounded-full hover:bg-white/30  transition duration-300  fade-in-10 p-2 cursor-pointer">
@@ -153,7 +167,7 @@ export const Appbar = () => {
         </div>
       )}
 
-      <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} />
+      <OtpModal isOpen={isOtpModalOpen} onClose={closeOtpModal} email={email} />
     </div>
   );
 };

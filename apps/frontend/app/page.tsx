@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import CryptoPage from "./components/home/Hot";
 import coinNames from "./[data]/coin";
 import { useRouter } from "next/navigation";
+
 import {
   Pagination,
   PaginationContent,
@@ -45,7 +46,6 @@ const MarketsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [user, setUser] = useState<string>("");
   const itemsPerPage = 8;
   const router = useRouter();
 
@@ -76,7 +76,6 @@ const MarketsPage = () => {
     };
 
     fetchTickers();
-    setUser(localStorage.getItem("user") || "");
   }, []);
 
   const handlePageChange = (page: number) => {
@@ -104,7 +103,7 @@ const MarketsPage = () => {
       <div className="">
         <div className="mx-72 flex gap-10 flex-col ">
           <section id="main" className="w-full mt-10">
-            <CryptoPage user={user} />
+            <CryptoPage />
           </section>
 
           <section

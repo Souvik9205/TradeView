@@ -251,13 +251,12 @@ authRouter.post("/verify-otp", async (req, res) => {
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
       expiresIn: "5d",
     });
-    res
-      .status(200)
-      .json({
-        message: token,
-        success: true,
-        user: usernameFromEmial(parseData.data.email),
-      });
+    res.status(200).json({
+      message: token,
+      success: true,
+      user: usernameFromEmial(parseData.data.email),
+      token: token,
+    });
   } catch (e) {
     res.status(500).json({ message: "Internal server error" });
   }

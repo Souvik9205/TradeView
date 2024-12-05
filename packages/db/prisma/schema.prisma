@@ -19,6 +19,8 @@ model User {
   username String?  
 
   trades   Trade[]
+  currencies Currency[]
+  monthlyProfits MonthlyProfit[]
 }
 
 model Trade {
@@ -33,6 +35,25 @@ model Trade {
   sellPrice  Float    @default(0)
   volume     Float    @default(0)
   gain       Float    @default(0)
+}
+
+model Currency {
+  id       String  @id @unique @default(cuid())
+  traderId   String
+  trader     User    @relation(fields: [traderId], references: [id])
+
+  name     String
+  volume   Float
+}
+
+model MonthlyProfit {
+  id        String   @id @unique @default(cuid())
+  traderId    String
+  trader      User     @relation(fields: [traderId], references: [id])
+
+  month     Int      
+  year      Int      
+  profit    Float    @default(0) 
 }
 
 model Otp {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Separator } from "@/components/ui/separator";
+import { useRouter } from "next/navigation";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type Trade = {
   id: string;
@@ -29,6 +30,7 @@ type Trade = {
 };
 
 const AllTrades = ({ userId }: { userId: string }) => {
+  const router = useRouter();
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -56,11 +58,7 @@ const AllTrades = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg shadow-lg">
-      <p className="text-lg text-white/80 font-bold mb-4">
-        All of Your Executed Trades
-      </p>
-      <Separator />
+    <div className="p-6 bg-neutral-900/50 rounded-lg shadow-lg">
       <ScrollArea className="h-[30vh] mt-4 bg-white/10 rounded-lg overflow-auto p-2">
         {trades.length > 0 ? (
           <table className="w-full text-left">
@@ -105,7 +103,12 @@ const AllTrades = ({ userId }: { userId: string }) => {
             </tbody>
           </table>
         ) : (
-          <p className="text-center text-white/60">No trades available.</p>
+          <div className="pt-10 flex flex-col items-center gap-5">
+            <p className="text-center text-white/60">No trades available.</p>
+            <Button onClick={() => router.push("/")}>
+              Explore Market to Trade
+            </Button>
+          </div>
         )}
       </ScrollArea>
 

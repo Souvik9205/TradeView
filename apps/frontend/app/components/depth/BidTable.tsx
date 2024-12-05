@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 export const BidTable = ({
   bids,
@@ -8,15 +8,21 @@ export const BidTable = ({
   bids: [string, string][];
   onTotalChange: (total: number) => void;
 }) => {
-  let currentTotal = 0;
-  const relevantBids = bids.slice(0, 12);
+  const bidsWithTotal = useMemo(() => {
+    let runningTotal = 0;
+    return bids
+      .filter(([_, quantity]) => Number(quantity) > 0.2)
+      .slice(0, 12)
+      .map(([price, quantity]) => {
+        runningTotal += Number(quantity);
+        return [price, quantity, runningTotal] as [string, string, number];
+      });
+  }, [bids]);
 
-  const bidsWithTotal: [string, string, number][] = relevantBids.map(
-    ([price, quantity]) => [price, quantity, (currentTotal += Number(quantity))]
-  );
-  const maxTotal = relevantBids.reduce(
-    (acc, [_, quantity]) => acc + Number(quantity),
-    0
+  // Calculate the max total dynamically
+  const maxTotal = useMemo(
+    () => bidsWithTotal.reduce((acc, [, , total]) => Math.max(acc, total), 0),
+    [bidsWithTotal]
   );
   useEffect(() => {
     onTotalChange(maxTotal);

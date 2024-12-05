@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo } from "react";
 
 export const AskTable = ({
   asks,
@@ -8,18 +8,26 @@ export const AskTable = ({
   asks: [string, string][];
   onTotalChange: (total: number) => void;
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  let currentTotal = 0;
-  const relevantAsks = asks.slice(0, 12);
+  const askWithTotal = useMemo(() => {
+    let runningTotal = 0;
+    const processedAsks = asks
+      .filter(([_, quantity]) => Number(quantity) > 0.2) // Filter out small quantities
+      .map(([price, quantity]) => {
+        runningTotal += Number(quantity);
+        return [price, quantity, runningTotal] as [string, string, number];
+      });
 
-  const asksWithTotal: [string, string, number][] = relevantAsks.map(
-    ([price, quantity]) => [price, quantity, (currentTotal += Number(quantity))]
+    // Sort in descending order by total
+    return processedAsks.sort((a, b) => b[2] - a[2]).slice(0, 12);
+  }, [asks]);
+
+  // Calculate the max total dynamically
+  const maxTotal = useMemo(
+    () => askWithTotal.reduce((acc, [, , total]) => Math.max(acc, total), 0),
+    [askWithTotal]
   );
-  const maxTotal = relevantAsks.reduce(
-    (acc, [_, quantity]) => acc + Number(quantity),
-    0
-  );
-  asksWithTotal.reverse();
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     onTotalChange(maxTotal);
@@ -36,7 +44,7 @@ export const AskTable = ({
       ref={containerRef}
       className="max-h-[25vh] overflow-y-scroll hidden-scrollbar overflow-x-hidden"
     >
-      {asksWithTotal.map(([price, quantity, total]) => (
+      {askWithTotal.map(([price, quantity, total]) => (
         <Ask
           maxTotal={maxTotal}
           key={price}

@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { ChartManager } from "../[utils]/ChartManager";
+import { SignalingManager } from "../[utils]/SignalingManager";
 import { getKlines } from "../[utils]/httpClient";
 import { KLine } from "../[utils]/types";
 
@@ -12,17 +13,14 @@ export function TradeView({ market }: { market: string }) {
       const klineData = await getKlines(
         market,
         "1h",
-        Math.floor((new Date().getTime() - 1000 * 60 * 60 * 24 * 7) / 1000), // 7 days ago
-        Math.floor(new Date().getTime() / 1000) // current time
+        Math.floor((new Date().getTime() - 1000 * 60 * 60 * 24 * 7) / 1000),
+        Math.floor(new Date().getTime() / 1000)
       );
 
       if (chartRef.current) {
-        // Destroy previous instance if it exists
         if (chartManagerRef.current) {
           chartManagerRef.current.destroy();
         }
-
-        // Create new ChartManager with updated Kline data
         const chartManager = new ChartManager(
           chartRef.current,
           [
@@ -35,7 +33,7 @@ export function TradeView({ market }: { market: string }) {
             })),
           ].sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1)),
           {
-            background: "#0e0f14",
+            background: "#191919",
             color: "white",
           }
         );
@@ -48,45 +46,49 @@ export function TradeView({ market }: { market: string }) {
   };
 
   useEffect(() => {
-    // Initial fetch of Kline data on component mount
     fetchAndUpdateKlines();
 
-    // WebSocket subscription
-    const ws = new WebSocket("wss://your-websocket-url");
-    ws.onopen = () => {
-      ws.send(
-        JSON.stringify({
-          method: "SUBSCRIBE",
-          params: [`trade.${market}`],
-          id: 2,
-        })
-      );
-    };
+    const signalingManager = SignalingManager.getInstance();
 
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data?.stream === `trade.${market}` && data?.data) {
-        // Trigger Kline fetch and chart update on each trade message
+    const callbackId = `${market}-ticker`;
+    signalingManager.registerCallback(
+      "ticker",
+      (newTicker) => {
+        console.log("Updated Ticker:", newTicker);
         fetchAndUpdateKlines();
-      }
-    };
+      },
+      callbackId
+    );
 
-    ws.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+    signalingManager.registerCallback(
+      "depth",
+      (depthData) => {
+        console.log("Updated Depth:", depthData);
+      },
+      `${market}-depth`
+    );
 
-    // Clean up on unmount
+    signalingManager.sendMessage({
+      method: "SUBSCRIBE",
+      params: [`ticker.${market}`, `depth.${market}`],
+      id: 2,
+    });
+
     return () => {
-      ws.close();
-      if (chartManagerRef.current) {
-        chartManagerRef.current.destroy();
-      }
+      signalingManager.deRegisterCallback("ticker", callbackId);
+      signalingManager.deRegisterCallback("depth", `${market}-depth`);
+      signalingManager.sendMessage({
+        method: "UNSUBSCRIBE",
+        params: [`ticker.${market}`, `depth.${market}`],
+        id: 3,
+      });
     };
   }, [market]);
 
   return (
     <div
       ref={chartRef}
+      className="w-full h-full mt-1 rounded-lg shadow-md"
       style={{ height: "100%", width: "100%", marginTop: 4 }}
     ></div>
   );

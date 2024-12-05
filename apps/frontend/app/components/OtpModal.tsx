@@ -9,16 +9,22 @@ import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
+import axios from "axios";
+import { useAuthStore } from "../[utils]/AuthStore";
 
 const OtpModal = ({
   isOpen,
   onClose,
+  email,
 }: {
   isOpen: boolean;
   onClose: () => void;
+  email: string;
 }) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
+  const backendUrl = "http://localhost:3121";
+  const login = useAuthStore((state) => state.login);
 
   const otpForm = useFormik({
     initialValues: {
@@ -30,12 +36,25 @@ const OtpModal = ({
         .matches(/^[0-9]+$/, "OTP must be numeric")
         .required("Required"),
     }),
-    onSubmit: (values) => {
-      setLoading(true);
-      console.log("Form submitted with values:", values);
-      setValue("");
-      setLoading(false);
-      onClose();
+    onSubmit: async (values) => {
+      try {
+        setLoading(true);
+        const res = await axios.post(`${backendUrl}/auth/verify-otp`, {
+          email: email,
+          otp: values.otp,
+        });
+        if (res.status === 200) {
+          setValue("");
+          console.log(res.data);
+          localStorage.setItem("user", res.data.user);
+          localStorage.setItem("token", res.data.token);
+          login(res.data.user, res.data.token);
+          setLoading(false);
+          onClose();
+        }
+      } catch (e) {
+        console.error(e);
+      }
     },
   });
 

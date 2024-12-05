@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useAuthStore } from "@/app/[utils]/AuthStore";
 
 const CRYPTO_SYMBOLS = [
   "BTC_USDC",
@@ -20,11 +21,7 @@ const CRYPTO_SYMBOLS = [
   "SOL_USDC",
 ];
 
-interface CryptoPageProps {
-  user: string;
-}
-
-const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
+const CryptoPage = () => {
   const router = useRouter();
   const [cryptocurrencies, setCryptocurrencies] = useState<
     {
@@ -42,6 +39,8 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [email, setEmail] = useState("");
+  const { isAuthenticated, user } = useAuthStore();
+  const login = useAuthStore((state) => state.login);
 
   const backendUrl = "http://localhost:3121";
 
@@ -92,6 +91,8 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
           setEmail("");
           setOtp("");
           localStorage.setItem("user", res.data.user);
+          localStorage.setItem("token", res.data.token);
+          login(res.data.user, res.data.token);
           setLoading(false);
           closeModal();
         }
@@ -133,7 +134,7 @@ const CryptoPage: React.FC<CryptoPageProps> = ({ user }) => {
 
   return (
     <div className="text-white flex items-center justify-around px-4 gap-20 ">
-      {user != "" ? (
+      {isAuthenticated ? (
         <section className="flex flex-col items-baseline gap-10 w-2/3 pl-10">
           <div className="text-left">
             <h1 className="text-xxxl font-bold leading-tight text-yellow-400">

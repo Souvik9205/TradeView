@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import CryptoPage from "./components/home/Hot";
 import coinNames from "./[data]/coin";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import {
   Pagination,
@@ -84,8 +85,12 @@ const MarketsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-900 text-white flex items-center justify-center">
-        <p>Loading markets...</p>
+      <div className="min-h-screen mx-72 flex flex-col items-center">
+        <div className="flex gap-2 h-3/5 w-full">
+          <Skeleton className="w-2/3 h-full" />
+          <Skeleton className="w-1/3 h-full" />
+        </div>
+        <Skeleton className="h-2/5 w-full" />
       </div>
     );
   }

@@ -61,7 +61,14 @@ export default function Page() {
         <MarketBar market={market as string} ticker={ticker} />
         <div className="flex h-[80vh] border-y border-slate-800">
           <div className="flex flex-col flex-1 border border-slate-800 h-full">
-            <TradeView market={market as string} />
+            {ticker && ticker.lastPrice ? (
+              <TradeView
+                market={market as string}
+                price={parseFloat(ticker.lastPrice)}
+              />
+            ) : (
+              <div>Loading...</div>
+            )}
           </div>
           <div className="flex flex-col w-[20vw] overflow-hidden">
             {ticker && ticker.lastPrice ? (

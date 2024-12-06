@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import OtpModal from "./OtpModal";
 import axios from "axios";
 import { useAuthStore } from "../[utils]/AuthStore";
+import { useToast } from "@/hooks/use-toast";
 
 export const Appbar = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ export const Appbar = () => {
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [email, setEmail] = useState("");
   const { isAuthenticated } = useAuthStore();
+  const { toast } = useToast();
 
   const backendUrl = "http://localhost:3121";
 
@@ -53,6 +55,12 @@ export const Appbar = () => {
       console.error(e);
     }
   };
+  const handleWallet = () => {
+    toast({
+      title: "Wallet",
+      description: "Wallet is not yet implemented",
+    });
+  };
 
   return (
     <div className=" backdrop-blur-md bg-gradient-to-tr from-white/10 to-black/70 border-b border-slate-700 shadow-md sticky z-50 top-0">
@@ -62,7 +70,7 @@ export const Appbar = () => {
             className="text-lg pl-4 flex flex-col justify-center cursor-pointer text-white font-semibold hover:text-gray-300 transition duration-300"
             onClick={() => router.push("/")}
           >
-            Exchange
+            TradeView
           </div>
         </div>
 
@@ -78,10 +86,16 @@ export const Appbar = () => {
                 </TooltipTrigger>
                 <TooltipContent className="bg-gradient-to-tr from-neutral-600 to-neutral-800">
                   <div className="flex flex-col gap-5">
-                    <Button className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400">
+                    <Button
+                      className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                      onClick={handleWallet}
+                    >
                       Add Money
                     </Button>
-                    <Button className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400">
+                    <Button
+                      className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                      onClick={handleWallet}
+                    >
                       Deposite Money
                     </Button>
                   </div>

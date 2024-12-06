@@ -71,7 +71,11 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return (
+    <div className="relative ">
+      <Line data={chartData} options={options} />
+    </div>
+  );
 };
 
 export default LineChart;

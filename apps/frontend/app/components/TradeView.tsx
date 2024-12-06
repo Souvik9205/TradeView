@@ -2,9 +2,15 @@ import { useEffect, useRef } from "react";
 import { ChartManager } from "../[utils]/ChartManager";
 import { SignalingManager } from "../[utils]/SignalingManager";
 import { getKlines } from "../[utils]/httpClient";
-import { KLine } from "../[utils]/types";
+import { debounce } from "lodash";
 
-export function TradeView({ market }: { market: string }) {
+export function TradeView({
+  market,
+  price,
+}: {
+  market: string;
+  price: number;
+}) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartManagerRef = useRef<ChartManager | null>(null);
 
@@ -23,15 +29,15 @@ export function TradeView({ market }: { market: string }) {
         }
         const chartManager = new ChartManager(
           chartRef.current,
-          [
-            ...klineData.map((x) => ({
+          klineData
+            .map((x) => ({
               close: parseFloat(x.close),
               high: parseFloat(x.high),
               low: parseFloat(x.low),
               open: parseFloat(x.open),
               timestamp: new Date(x.end),
-            })),
-          ].sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1)),
+            }))
+            .sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1)),
           {
             background: "#191919",
             color: "white",
@@ -45,25 +51,28 @@ export function TradeView({ market }: { market: string }) {
     }
   };
 
+  const debouncedFetchAndUpdateKlines = debounce(fetchAndUpdateKlines, 500);
+
   useEffect(() => {
     fetchAndUpdateKlines();
+  }, [price]); // Trigger fetch only when the price changes
 
+  useEffect(() => {
     const signalingManager = SignalingManager.getInstance();
 
     const callbackId = `${market}-ticker`;
     signalingManager.registerCallback(
       "ticker",
-      (newTicker) => {
-        console.log("Updated Ticker:", newTicker);
-        fetchAndUpdateKlines();
+      () => {
+        debouncedFetchAndUpdateKlines();
       },
       callbackId
     );
 
     signalingManager.registerCallback(
       "depth",
-      (depthData) => {
-        console.log("Updated Depth:", depthData);
+      () => {
+        debouncedFetchAndUpdateKlines();
       },
       `${market}-depth`
     );
@@ -75,6 +84,7 @@ export function TradeView({ market }: { market: string }) {
     });
 
     return () => {
+      debouncedFetchAndUpdateKlines.cancel();
       signalingManager.deRegisterCallback("ticker", callbackId);
       signalingManager.deRegisterCallback("depth", `${market}-depth`);
       signalingManager.sendMessage({
@@ -83,7 +93,7 @@ export function TradeView({ market }: { market: string }) {
         id: 3,
       });
     };
-  }, [market]);
+  }, [market, debouncedFetchAndUpdateKlines]);
 
   return (
     <div

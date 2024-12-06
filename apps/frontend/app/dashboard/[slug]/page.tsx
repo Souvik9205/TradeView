@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   TrendingUp,
   BarChart2,
@@ -11,40 +11,85 @@ import {
 import AllTrades from "@/app/components/user/AllTrades";
 import LineChart from "@/app/components/user/ProfitChart";
 import { useAuthStore } from "@/app/[utils]/AuthStore";
+import { getUser, getMonthlyStats } from "@/app/[utils]/serverClient";
+
+import Coin from "@/app/components/user/Coins";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
-  const [user, setUser] = useState({
-    avatar: "https://via.placeholder.com/150",
-    name: "John Doe",
-    email: "john.doe@example.com",
-    walletBalance: 120.5,
-    coins: [
-      { name: "Bitcoin", symbol: "BTC", amount: 0.0023, color: "#F7931A" },
-      { name: "Ethereum", symbol: "ETH", amount: 0.15, color: "#627EEA" },
-      { name: "Litecoin", symbol: "LTC", amount: 2.5, color: "#345D9D" },
-    ],
-  });
-
-  const monthlyProfitData = [
-    { month: "Jan", profit: 3000 },
-    { month: "Feb", profit: 4000 },
-    { month: "Mar", profit: 2500 },
-    { month: "Apr", profit: 5000 },
-    { month: "May", profit: 6200 },
-    { month: "Jun", profit: 4900 },
-    { month: "Jul", profit: 7000 },
-    { month: "Aug", profit: 7500 },
-    { month: "Sep", profit: 6700 },
-    { month: "Oct", profit: 8000 },
-  ];
-  const handleClaim = () => {
-    setUser((prev) => ({
-      ...prev,
-      walletBalance: prev.walletBalance + 10,
-    }));
-    alert("Claimed $10 successfully!");
-  };
+  const { user, isAuthenticated } = useAuthStore();
   const logout = useAuthStore((state) => state.logout);
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const [client, setClient] = useState({
+    avatar: "https://via.placeholder.com/150",
+    name: "",
+    email: "",
+    walletBalance: 0,
+  });
+  const [monthlyProfitData, setMonthlyProfitData] = useState<
+    { month: string; profit: number }[]
+  >([]);
+
+  useEffect(() => {
+    if (user != null) {
+      const fetchUserData = async () => {
+        try {
+          const userData = await getUser(user as string);
+          setClient((prev) => ({
+            ...prev,
+            name: userData.user.username,
+            email: userData.user.email,
+          }));
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+
+      fetchUserData();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const fetchMonthlyStats = async () => {
+      try {
+        const stats = await getMonthlyStats();
+
+        // Format the stats for the chart
+        const formattedStats = stats.stats.map((stat: any) => ({
+          month: new Date(stat.year, stat.month - 1).toLocaleString("default", {
+            month: "short",
+          }),
+          profit: stat.profit,
+        }));
+
+        setMonthlyProfitData(formattedStats);
+      } catch (error) {
+        console.error("Error fetching monthly stats:", error);
+      }
+    };
+
+    fetchMonthlyStats();
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      router.push("/");
+    }
+  }, []);
+
+  const handleClaim = () => {
+    toast({
+      title: "Wallet",
+      description: "Wallet is not yet implemented",
+    });
+  };
+  const handleLogout = () => {
+    logout();
+    router.push("/");
+  };
 
   return (
     <div className="relative bg-gradient-to-br from-neutral-900 to-neutral-800 text-white min-h-screen p-4 md:p-8">
@@ -60,8 +105,8 @@ const Dashboard = () => {
               Dashboard
             </h1>
             <button
-              className="p-2 bg-yellow-400 text-black rounded-lg"
-              onClick={logout}
+              className="bg-gradient-to-br p-1 rounded-md text-base font-semibold text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+              onClick={handleLogout}
             >
               Log out
             </button>
@@ -72,13 +117,13 @@ const Dashboard = () => {
           <div className="bg-neutral-800/60 backdrop-blur-md rounded-xl shadow-2xl p-6">
             <div className="flex items-center space-x-4 mb-6">
               <img
-                src={user.avatar}
+                src={client.avatar}
                 alt="User Avatar"
                 className="w-16 h-16 rounded-full ring-4 ring-yellow-500/50"
               />
               <div>
-                <h2 className="text-xl text-yellow-300">{user.name}</h2>
-                <p className="text-sm text-gray-400">{user.email}</p>
+                <h2 className="text-xl text-yellow-300">{client.name}</h2>
+                <p className="text-sm text-gray-400">{client.email}</p>
               </div>
             </div>
 
@@ -89,11 +134,11 @@ const Dashboard = () => {
               </div>
               <div className="flex justify-between items-center p-4 bg-neutral-900/50 rounded-lg">
                 <span className="text-2xl font-bold text-yellow-300">
-                  ${user.walletBalance.toFixed(2)}
+                  ${client.walletBalance.toFixed(2)}
                 </span>
                 <button
                   onClick={handleClaim}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md transition-all"
+                  className="bg-gradient-to-br p-1 rounded-md text-base font-semibold text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
                 >
                   Claim $10
                 </button>
@@ -105,35 +150,7 @@ const Dashboard = () => {
                 <TrendingUp size={20} className="text-yellow-400" />
                 <h3 className="text-lg font-semibold">Coins</h3>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full bg-neutral-900/50 rounded-lg">
-                  <thead>
-                    <tr className="border-b border-yellow-500/20">
-                      <th className="p-3 text-left">Name</th>
-                      <th className="p-3 text-left">Symbol</th>
-                      <th className="p-3 text-left">Amount</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {user.coins.map((coin, idx) => (
-                      <tr
-                        key={idx}
-                        className="hover:bg-neutral-800/50 transition-colors"
-                      >
-                        <td className="p-3 flex items-center space-x-2">
-                          <div
-                            className="w-3 h-3 rounded-full"
-                            style={{ backgroundColor: coin.color }}
-                          />
-                          <span>{coin.name}</span>
-                        </td>
-                        <td className="p-3">{coin.symbol}</td>
-                        <td className="p-3">{coin.amount}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <Coin />
             </div>
           </div>
 
@@ -157,9 +174,6 @@ const Dashboard = () => {
               </h2>
             </div>
             <div className="bg-neutral-900/50 p-4 rounded-lg">
-              {/* <p className="text-center text-gray-400">
-                Chart visualization is temporarily unavailable
-              </p> */}
               <LineChart data={monthlyProfitData} />
             </div>
           </div>

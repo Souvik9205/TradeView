@@ -14,14 +14,24 @@ export const OtpSchema = z.object({
 export const TradeSchema = z.object({
   traderId: z.string(),
   coin: z.string(),
-  buyTime: z.date(),
+  buyTime: z.preprocess((arg) => {
+    if (typeof arg === "string" || arg instanceof String) {
+      return new Date(arg as string);
+    }
+    return arg;
+  }, z.date()),
   buyPrice: z.number(),
   volume: z.number(),
 });
 export const SellSchema = z.object({
   userId: z.string(),
   coin: z.string(),
-  sellTime: z.date(),
+  sellTime: z.preprocess((arg) => {
+    if (typeof arg === "string" || arg instanceof String) {
+      return new Date(arg as string);
+    }
+    return arg;
+  }, z.date()),
   sellPrice: z.number(),
   volume: z.number(),
 });

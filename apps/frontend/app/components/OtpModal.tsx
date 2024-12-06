@@ -11,6 +11,7 @@ import * as Yup from "yup";
 import { useState } from "react";
 import axios from "axios";
 import { useAuthStore } from "../[utils]/AuthStore";
+import { useToast } from "@/hooks/use-toast";
 
 const OtpModal = ({
   isOpen,
@@ -25,6 +26,7 @@ const OtpModal = ({
   const [loading, setLoading] = useState(false);
   const backendUrl = "http://localhost:3121";
   const login = useAuthStore((state) => state.login);
+  const { toast } = useToast();
 
   const otpForm = useFormik({
     initialValues: {
@@ -46,14 +48,21 @@ const OtpModal = ({
         if (res.status === 200) {
           setValue("");
           console.log(res.data);
-          localStorage.setItem("user", res.data.user);
-          localStorage.setItem("token", res.data.token);
-          login(res.data.user, res.data.token);
+          toast({
+            title: "Log in Success",
+            description: "You are logged in successfully",
+          });
+          login(res.data.user, res.data.token, res.data.id);
           setLoading(false);
           onClose();
         }
       } catch (e) {
         console.error(e);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Something went wrong",
+        });
       }
     },
   });

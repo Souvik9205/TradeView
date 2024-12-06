@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAuthStore } from "@/app/[utils]/AuthStore";
+import { useToast } from "@/hooks/use-toast";
 
 const CRYPTO_SYMBOLS = [
   "BTC_USDC",
@@ -41,6 +42,7 @@ const CryptoPage = () => {
   const [email, setEmail] = useState("");
   const { isAuthenticated, user } = useAuthStore();
   const login = useAuthStore((state) => state.login);
+  const { toast } = useToast();
 
   const backendUrl = "http://localhost:3121";
 
@@ -90,14 +92,21 @@ const CryptoPage = () => {
         if (res.status === 200) {
           setEmail("");
           setOtp("");
-          localStorage.setItem("user", res.data.user);
-          localStorage.setItem("token", res.data.token);
-          login(res.data.user, res.data.token);
+          toast({
+            title: "Sign Up Success",
+            description: "Your account is created successfully",
+          });
+          login(res.data.user, res.data.token, res.data.id);
           setLoading(false);
           closeModal();
         }
       } catch (e) {
         console.error(e);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Something went wrong",
+        });
       }
     },
   });

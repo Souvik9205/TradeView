@@ -1,18 +1,107 @@
 "use client";
 import { useEffect, useState } from "react";
+import { SellClient, TradeClient } from "../[utils]/tradeClient";
+import { useAuthStore } from "../[utils]/AuthStore";
+import { useToast } from "@/hooks/use-toast";
 
 export function SwapUI({ market, price }: { market: string; price: number }) {
   const [amount, setAmount] = useState(price);
   const [wallet, setWallet] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [activeTab, setActiveTab] = useState("buy");
-  const [type, setType] = useState("limit");
+  const [type, setType] = useState("market");
+  const { toast } = useToast();
 
   const total = (amount * quantity).toFixed(2);
+  const id = localStorage.getItem("userId");
 
   useEffect(() => {
     setAmount(price);
-  }, [type]);
+  }, [price]);
+
+  function HandleTrade() {
+    if (quantity <= 0) {
+      toast({
+        title: "Invalid Quantity",
+        description: "Quantity must be greater than 0",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      if (activeTab === "buy") {
+        TradeClient({
+          traderId: id as string,
+          coin: market,
+          buyTime: new Date().toISOString(),
+          buyPrice: amount,
+          volume: quantity,
+        })
+          .then((res) => {
+            console.log("buy res", res);
+            if (res.message === "trade updated") {
+              toast({
+                title: "Success",
+                description: "Buy transaction successful",
+              });
+            } else {
+              toast({
+                title: "Transaction",
+                description:
+                  res.message || "Something went wrong during the transaction",
+              });
+            }
+          })
+          .catch((err) => {
+            toast({
+              title: "Error",
+              description: err.message || "Failed to process the transaction",
+              variant: "destructive",
+            });
+            console.error(err);
+          });
+      } else {
+        SellClient({
+          userId: id as string,
+          coin: market,
+          sellTime: new Date().toISOString(),
+          sellPrice: amount,
+          volume: quantity,
+        })
+          .then((res) => {
+            console.log("sell res", res);
+            if (res.message === "trade updated") {
+              toast({
+                title: "Success",
+                description: "Sell transaction successful",
+              });
+            } else {
+              toast({
+                title: "Transaction",
+                description:
+                  res.message || "Something went wrong during the transaction",
+              });
+            }
+          })
+          .catch((err) => {
+            toast({
+              title: "Error",
+              description: "No Trades found",
+              variant: "destructive",
+            });
+            console.error(err);
+          });
+      }
+    } catch (err) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+      console.error(err);
+    }
+  }
 
   return (
     <div className="bg-neutral-700/60 justify-between border border-neutral-600 p-2">
@@ -99,6 +188,7 @@ export function SwapUI({ market, price }: { market: string; price: number }) {
               type="button"
               className={`font-semibold mt-5 focus:ring-blue-200 focus:none focus:outline-none text-center h-12 rounded-xl text-base px-4 py-2 my-4 ${activeTab === "buy" ? "bg-green-500/70" : "bg-red-500/70"} text-greenPrimaryButtonText active:scale-98`}
               data-rac=""
+              onClick={HandleTrade}
             >
               {activeTab === "buy" ? "Buy" : "Sell"}
             </button>

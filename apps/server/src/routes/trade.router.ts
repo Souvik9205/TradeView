@@ -7,7 +7,7 @@ export const tradeRouter = Router();
 const currentMonth = new Date().getMonth() + 1;
 const currentYear = new Date().getFullYear();
 
-tradeRouter.post("/trade", verifyToken, async (req, res) => {
+tradeRouter.post("/buy", verifyToken, async (req, res) => {
   const parseData = TradeSchema.safeParse(req.body);
   const userId = req.userId as string;
   if (!parseData.success) {
@@ -21,7 +21,7 @@ tradeRouter.post("/trade", verifyToken, async (req, res) => {
         coin: parseData.data.coin,
       },
     });
-    if (existingTrade) {
+    if (existingTrade && existingTrade.volume > 0) {
       const totalVol = existingTrade.volume + parseData.data.volume;
       const weightedBuyPrice =
         (existingTrade.buyPrice * existingTrade.volume +
@@ -60,6 +60,7 @@ tradeRouter.post("/trade", verifyToken, async (req, res) => {
         }
       }
       res.status(200).json({ message: "trade updated", trade: updateTrade });
+      return;
     }
 
     const newTrade = await client.trade.create({
@@ -100,6 +101,7 @@ tradeRouter.post("/sell", verifyToken, async (req, res) => {
       where: {
         traderId: userId,
         coin: parseData.data.coin,
+        volume: { gt: 0 },
       },
     });
 
@@ -242,7 +244,7 @@ tradeRouter.get("/portfolio", verifyToken, async (req, res) => {
       },
     });
 
-    if (!portfolio || portfolio.length === 0) {
+    if (!portfolio) {
       res.status(404).json({ message: "No currencies found in portfolio" });
       return;
     }
@@ -286,15 +288,17 @@ tradeRouter.get("/monthlystat", verifyToken, async (req, res) => {
   const userId = req.userId;
   try {
     const monthlyStats = [];
-    for (let i = 0; i < 5; i++) {
-      const month = (currentMonth - i + 12) % 12 || 12;
-      const year = currentMonth - i <= 0 ? currentYear - 1 : currentYear;
+    for (let i = 4; i >= 0; i--) {
+      const date = new Date(currentYear, currentMonth - i - 1);
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
 
+      // Fetch the profit data
       const profitData = await client.monthlyProfit.findFirst({
         where: {
           traderId: userId,
-          month: month,
-          year: year,
+          month,
+          year,
         },
       });
 

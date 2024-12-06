@@ -254,6 +254,7 @@ authRouter.post("/verify-otp", async (req, res) => {
     res.status(200).json({
       message: token,
       success: true,
+      id: user.id,
       user: usernameFromEmial(parseData.data.email),
       token: token,
     });
@@ -263,18 +264,18 @@ authRouter.post("/verify-otp", async (req, res) => {
 });
 
 authRouter.get("/user/:id", verifyToken, async (req, res) => {
-  const userId = req.params.id;
+  const username = req.params.id;
   try {
-    const user = await client.user.findUnique({
+    const user = await client.user.findFirst({
       where: {
-        id: userId,
+        username: username,
       },
     });
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
-    res.status(200).json({ message: user, success: true });
+    res.status(200).json({ user });
   } catch (e) {
     res.status(500).json({ message: "Internal server error" });
   }
@@ -294,11 +295,16 @@ authRouter.get("/leaderboard", verifyToken, async (req, res) => {
 });
 
 authRouter.get("/user/trades/:id", verifyToken, async (req, res) => {
-  const userId = req.params.id;
+  const userId = req.userId;
+  const traderId = req.params.id;
   try {
+    if (userId !== traderId) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
     const trades = await client.trade.findMany({
       where: {
-        traderId: userId,
+        traderId: traderId,
       },
     });
     if (!trades) {

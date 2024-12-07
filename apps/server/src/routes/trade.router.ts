@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware";
-import client from "@repo/db/client";
+import { PrismaClient } from "@prisma/client";
 import { SellSchema, TradeSchema } from "../types";
 
 export const tradeRouter = Router();
+const client = new PrismaClient();
 const currentMonth = new Date().getMonth() + 1;
 const currentYear = new Date().getFullYear();
 

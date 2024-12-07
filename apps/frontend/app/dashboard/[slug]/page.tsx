@@ -56,8 +56,6 @@ const Dashboard = () => {
     const fetchMonthlyStats = async () => {
       try {
         const stats = await getMonthlyStats();
-
-        // Format the stats for the chart
         const formattedStats = stats.stats.map((stat: any) => ({
           month: new Date(stat.year, stat.month - 1).toLocaleString("default", {
             month: "short",
@@ -169,7 +167,7 @@ const Dashboard = () => {
           <div className="bg-neutral-800/60 backdrop-blur-md p-6 rounded-xl shadow-2xl">
             <div className="flex items-center space-x-2 mb-4">
               <BarChart2 size={24} className="text-yellow-400" />
-              <h2 className="text-lg font-semibold text-yellow-300">
+              <h2 className="text-lg font-semibold">
                 Monthly Profit Analytics
               </h2>
             </div>

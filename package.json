@@ -1,5 +1,5 @@
 {
-  "name": "tradeView",
+  "name": "marketview",
   "private": true,
   "scripts": {
     "build": "turbo build",

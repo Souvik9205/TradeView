@@ -44,6 +44,15 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // This is key for true responsiveness
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+      },
+    },
     plugins: {
       legend: {
         display: true,
@@ -72,7 +81,7 @@ const LineChart: React.FC<LineChartProps> = ({ data }) => {
   };
 
   return (
-    <div className="relative ">
+    <div className="relative w-full h-64 md:h-80 lg:h-96">
       <Line data={chartData} options={options} />
     </div>
   );

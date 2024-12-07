@@ -57,7 +57,7 @@ authRouter.post("/signup", async (req, res) => {
             <td style="text-align: center;">
               <div style="background-color: #1c1c1c; max-width: 600px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);">
                 <div style="background-color: #FACC15; color: #0f0f0f; padding: 20px; text-align: center;">
-                  <h2 style="margin: 0; font-size: 24px; font-weight: bold;">TradeView</h2>
+                  <h2 style="margin: 0; font-size: 24px; font-weight: bold;">MarketView</h2>
                 </div>
                 <div style="padding: 30px; text-align: center;">
                   <h1 style="font-size: 32px; color: #FACC15; margin-bottom: 10px;">Your OTP Code</h1>
@@ -69,7 +69,7 @@ authRouter.post("/signup", async (req, res) => {
                   <p style="font-size: 14px; color: #888888;">If you did not request this, you can ignore this email.</p>
                 </div>
                 <div style="background-color: #1c1c1c; padding: 20px; text-align: center;">
-                  <p style="font-size: 12px; color: #888888; margin: 0;">© 2024 TradeView. All rights reserved.</p>
+                  <p style="font-size: 12px; color: #888888; margin: 0;">© 2024 MarketView. All rights reserved.</p>
                 </div>
               </div>
             </td>
@@ -100,7 +100,7 @@ authRouter.post("/signup", async (req, res) => {
     }
 
     await transporter.sendMail({
-      from: "TradeView <no-reply@example.com>",
+      from: "MarketView <no-reply@example.com>",
       to: parseData.data.email,
       subject: "Verify your email",
       html: emailHtmlContent,
@@ -152,7 +152,7 @@ authRouter.post("/signin", async (req, res) => {
             <td style="text-align: center;">
               <div style="background-color: #1c1c1c; max-width: 600px; margin: 0 auto; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);">
                 <div style="background-color: #ffc107; color: #0f0f0f; padding: 20px; text-align: center;">
-                  <h2 style="margin: 0; font-size: 24px; font-weight: bold;">TradeView</h2>
+                  <h2 style="margin: 0; font-size: 24px; font-weight: bold;">MarketView</h2>
                 </div>
                 <div style="padding: 30px; text-align: center;">
                   <h1 style="font-size: 32px; color: #ffc107; margin-bottom: 10px;">Your OTP Code</h1>
@@ -164,7 +164,7 @@ authRouter.post("/signin", async (req, res) => {
                   <p style="font-size: 14px; color: #888888;">If you did not request this, you can ignore this email.</p>
                 </div>
                 <div style="background-color: #1c1c1c; padding: 20px; text-align: center;">
-                  <p style="font-size: 12px; color: #888888; margin: 0;">© 2024 TradeView. All rights reserved.</p>
+                  <p style="font-size: 12px; color: #888888; margin: 0;">© 2024 MarketView. All rights reserved.</p>
                 </div>
               </div>
             </td>
@@ -195,7 +195,7 @@ authRouter.post("/signin", async (req, res) => {
     }
 
     await transporter.sendMail({
-      from: "TradeView <no-reply@example.com>",
+      from: "MarketView <no-reply@example.com>",
       to: parseData.data.email,
       subject: "Verify your email",
       html: emailHtmlContent,

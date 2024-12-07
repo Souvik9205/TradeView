@@ -12,48 +12,78 @@ import type { Ticker } from "@/app/[utils]/types";
 export default function Page() {
   const { market } = useParams();
   const [ticker, setTicker] = useState<Ticker | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    getTicker(market as string).then(setTicker);
-    const signaling = SignalingManager.getInstance();
+    if (isMobile) return;
+    try {
+      getTicker(market as string).then(setTicker);
+      const signaling = SignalingManager.getInstance();
 
-    signaling.registerCallback(
-      "ticker",
-      (data: Partial<Ticker> | { bids: any[]; asks: any[] }) => {
-        if ("bids" in data && "asks" in data) {
-          console.warn("Received unexpected market depth data:", data);
-          return;
-        }
+      signaling.registerCallback(
+        "ticker",
+        (data: Partial<Ticker> | { bids: any[]; asks: any[] }) => {
+          if ("bids" in data && "asks" in data) {
+            console.warn("Received unexpected market depth data:", data);
+            return;
+          }
 
-        setTicker((prevTicker) => ({
-          firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? "",
-          high: data?.high ?? prevTicker?.high ?? "",
-          lastPrice: data?.lastPrice ?? prevTicker?.lastPrice ?? "",
-          low: data?.low ?? prevTicker?.low ?? "",
-          priceChange: data?.priceChange ?? prevTicker?.priceChange ?? "",
-          priceChangePercent:
-            data?.priceChangePercent ?? prevTicker?.priceChangePercent ?? "",
-          quoteVolume: data?.quoteVolume ?? prevTicker?.quoteVolume ?? "",
-          symbol: data?.symbol ?? prevTicker?.symbol ?? "",
-          trades: data?.trades ?? prevTicker?.trades ?? "",
-          volume: data?.volume ?? prevTicker?.volume ?? "",
-        }));
-      },
-      `TICKER-${market}`
-    );
-    signaling.sendMessage({
-      method: "SUBSCRIBE",
-      params: [`ticker.${market}`],
-    });
-
-    return () => {
-      signaling.deRegisterCallback("ticker", `TICKER-${market}`);
+          setTicker((prevTicker) => ({
+            firstPrice: data?.firstPrice ?? prevTicker?.firstPrice ?? "",
+            high: data?.high ?? prevTicker?.high ?? "",
+            lastPrice: data?.lastPrice ?? prevTicker?.lastPrice ?? "",
+            low: data?.low ?? prevTicker?.low ?? "",
+            priceChange: data?.priceChange ?? prevTicker?.priceChange ?? "",
+            priceChangePercent:
+              data?.priceChangePercent ?? prevTicker?.priceChangePercent ?? "",
+            quoteVolume: data?.quoteVolume ?? prevTicker?.quoteVolume ?? "",
+            symbol: data?.symbol ?? prevTicker?.symbol ?? "",
+            trades: data?.trades ?? prevTicker?.trades ?? "",
+            volume: data?.volume ?? prevTicker?.volume ?? "",
+          }));
+        },
+        `TICKER-${market}`
+      );
       signaling.sendMessage({
-        method: "UNSUBSCRIBE",
+        method: "SUBSCRIBE",
         params: [`ticker.${market}`],
       });
-    };
+
+      return () => {
+        signaling.deRegisterCallback("ticker", `TICKER-${market}`);
+        signaling.sendMessage({
+          method: "UNSUBSCRIBE",
+          params: [`ticker.${market}`],
+        });
+      };
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   }, [market]);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
+
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  if (isMobile) {
+    return (
+      <div className="flex items-center justify-center h-[90vh] bg-gradient-to-bl from-neutral-800 to-neutral-950 text-white">
+        Please use a PC to access this platform.
+      </div>
+    );
+  }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-row flex-1 bg-gradient-to-bl from-neutral-800 to-neutral-950">

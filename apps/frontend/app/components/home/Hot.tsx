@@ -69,9 +69,11 @@ const CryptoPage = () => {
         }
       } catch (e) {
         console.error(e);
+        setLoading(false);
       }
     },
   });
+
   const otpForm = useFormik({
     initialValues: {
       otp: "",
@@ -107,6 +109,7 @@ const CryptoPage = () => {
           title: "Error",
           description: "Something went wrong",
         });
+        setLoading(false);
       }
     },
   });
@@ -142,16 +145,16 @@ const CryptoPage = () => {
   }, []);
 
   return (
-    <div className="text-white flex items-center justify-around px-4 gap-20 ">
+    <div className="text-white flex flex-col md:flex-row items-center justify-around px-4 py-8 gap-8 md:gap-20">
       {isAuthenticated ? (
-        <section className="flex flex-col items-baseline gap-10 w-2/3 pl-10">
-          <div className="text-left">
-            <h1 className="text-xxxl font-bold leading-tight text-yellow-400">
+        <section className="w-full md:w-2/3 text-center md:text-left px-4 md:pl-10">
+          <div className="mb-6">
+            <h1 className="text-xxl md:text-xxxl font-bold leading-tight text-yellow-400">
               Welcome <br />
               {user as string}
             </h1>
           </div>
-          <div className="text-left text-base tracking-tight text-white/70 pl-3">
+          <div className="text-base tracking-tight text-white/70 max-w-xl mx-auto md:mx-0">
             <p>
               Step into the future of finance! Unlock limitless opportunities,
               grow your wealth, and experience the thrill of crypto trading like
@@ -160,44 +163,45 @@ const CryptoPage = () => {
           </div>
         </section>
       ) : (
-        <section className="flex flex-col items-baseline gap-8 w-2/3 pl-3 ">
-          <div className="text-left">
-            <h1 className="text-xxxl font-bold leading-tight text-yellow-400">
+        <section className="w-full md:w-2/3 text-center md:text-left px-4 md:pl-3">
+          <div className="mb-6">
+            <h1 className="text-xxl md:text-xxxl font-bold leading-tight text-yellow-400">
               Start <br />
               Trading Today
             </h1>
           </div>
-          <div className="flex flex-col items-center pl-3">
-            <div className="flex">
-              <form onSubmit={emailForm.handleSubmit}>
-                <input
-                  type="text"
-                  name="email"
-                  placeholder="Enter Your Email"
-                  value={emailForm.values.email}
-                  onChange={emailForm.handleChange}
-                  onBlur={emailForm.handleBlur}
-                  className="px-4 py-2 w-72 rounded-l-lg bg-gradient-to-tl from-neutral-700 to-neutral-900 text-white placeholder-gray-400 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                />
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 px-6 py-2 font-semibold rounded-r-lg hover:bg-yellow-500 transition duration-300"
-                >
-                  {loading ? "Submitting..." : "Sign Up"}
-                </button>
-                {emailForm.touched.email && emailForm.errors.email ? (
-                  <div className="text-red-500 text-sm mt-1">
-                    {emailForm.errors.email}
-                  </div>
-                ) : null}
-              </form>
-            </div>
+          <div className="flex flex-col items-center md:items-start">
+            <form
+              onSubmit={emailForm.handleSubmit}
+              className="flex flex-col sm:flex-row items-center gap-2 w-full max-w-md"
+            >
+              <input
+                type="text"
+                name="email"
+                placeholder="Enter Your Email"
+                value={emailForm.values.email}
+                onChange={emailForm.handleChange}
+                onBlur={emailForm.handleBlur}
+                className="px-4 py-2 w-full sm:w-72 rounded-lg bg-gradient-to-tl from-neutral-700 to-neutral-900 text-white placeholder-gray-400 border border-neutral-600 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 px-6 py-2 font-semibold rounded-lg hover:bg-yellow-500 transition duration-300 w-full sm:w-auto"
+              >
+                {loading ? "Submitting..." : "Sign Up"}
+              </button>
+            </form>
+            {emailForm.touched.email && emailForm.errors.email ? (
+              <div className="text-red-500 text-sm mt-1">
+                {emailForm.errors.email}
+              </div>
+            ) : null}
           </div>
         </section>
       )}
 
-      <section className="w-1/3">
+      <section className="w-full md:w-1/3 px-4 md:px-0">
         <div className="bg-gradient-to-br from-neutral-700 to-neutral-900 border-2 border-neutral-600 mt-6 rounded-lg w-full p-6">
           <div className="w-full">
             <h2 className="text-lg font-semibold mb-4">Popular</h2>
@@ -211,21 +215,27 @@ const CryptoPage = () => {
                     router.push(`/trade/${crypto.fullName}_USDC`);
                   }}
                 >
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-3 sm:gap-5">
                     <img
                       src={`./coins/${crypto.name.toLowerCase()}.png`}
                       alt={crypto.name}
-                      className="h-8 w-8 rounded-full"
+                      className="h-6 w-6 sm:h-8 sm:w-8 rounded-full"
                     />
-                    <div className="ml-2">
-                      <h3 className="font-semibold">{crypto.name}</h3>
-                      <p className="text-sm text-gray-400">{crypto.fullName}</p>
+                    <div>
+                      <h3 className="font-semibold text-sm sm:text-base">
+                        {crypto.name}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-gray-400">
+                        {crypto.fullName}
+                      </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="font-semibold">{crypto.lastPrice}</p>
+                    <p className="font-semibold text-sm sm:text-base">
+                      {crypto.lastPrice}
+                    </p>
                     <p
-                      className={`text-sm ${
+                      className={`text-xs sm:text-sm ${
                         crypto.isPositive ? "text-green-400" : "text-red-400"
                       }`}
                     >
@@ -240,8 +250,8 @@ const CryptoPage = () => {
       </section>
 
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
-          <div className="bg-gradient-to-tr from-neutral-600 to-neutral-800 rounded-lg border border-gray-600 w-80 p-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
+          <div className="bg-gradient-to-tr from-neutral-600 to-neutral-800 rounded-lg border border-gray-600 w-full max-w-md p-6">
             <h2 className="text-lg font-semibold mb-4 text-yellow-400">
               Enter OTP
             </h2>
@@ -278,7 +288,7 @@ const CryptoPage = () => {
                   {otpForm.errors.otp}
                 </div>
               ) : null}
-              <div className="flex justify-end gap-4">
+              <div className="flex justify-end gap-4 w-full">
                 <Button
                   type="submit"
                   className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"

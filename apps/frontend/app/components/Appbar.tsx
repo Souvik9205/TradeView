@@ -6,9 +6,8 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import { FaWallet } from "react-icons/fa";
-import { FaUser } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { FaWallet, FaUser } from "react-icons/fa";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -23,12 +22,16 @@ export const Appbar = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [email, setEmail] = useState("");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { isAuthenticated } = useAuthStore();
   const { toast } = useToast();
 
   const backendUrl = "http://localhost:3121";
 
-  const openLoginModal = () => setIsLoginModalOpen(true);
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+    setIsMobileMenuOpen(false);
+  };
   const closeLoginModal = () => setIsLoginModalOpen(false);
   const openOtpModal = () => setIsOtpModalOpen(true);
   const closeOtpModal = () => setIsOtpModalOpen(false);
@@ -63,49 +66,52 @@ export const Appbar = () => {
   };
 
   return (
-    <div className=" backdrop-blur-md bg-gradient-to-tr from-white/10 to-black/70 border-b border-slate-700 shadow-md sticky z-50 top-0">
-      <div className="flex justify-between items-center px-16 py-3">
+    <div className="backdrop-blur-md bg-gradient-to-tr from-white/10 to-black/70 border-b border-slate-700 shadow-md sticky z-50 top-0">
+      <div className="flex justify-between items-center px-4 md:px-16 py-3">
+        {/* Logo */}
         <div className="flex items-center">
           <div
-            className="text-lg pl-4 flex flex-col justify-center cursor-pointer text-white font-semibold hover:text-gray-300 transition duration-300"
+            className="text-lg pl-2 md:pl-4 flex flex-col justify-center cursor-pointer text-white font-semibold hover:text-gray-300 transition duration-300"
             onClick={() => router.push("/")}
           >
-            TradeView
+            MarketView
           </div>
         </div>
 
-        <div className="flex items-center space-x-6 pr-6">
+        {/* Desktop Navigation */}
+        <div className="flex items-center space-x-6 md:pr-6">
           <TooltipProvider>
             <div className="flex gap-10">
-              <Tooltip delayDuration={150}>
-                <TooltipTrigger>
-                  <div className="relative cursor-pointer text-white hover:text-gray-300 transition duration-300 flex items-center space-x-5 border border-neutral-600 rounded-full p-1.5 px-3">
-                    <FaWallet size={20} />
-                    <p>{wallet}$</p>
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent className="bg-gradient-to-tr from-neutral-600 to-neutral-800">
-                  <div className="flex flex-col gap-5">
-                    <Button
-                      className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
-                      onClick={handleWallet}
-                    >
-                      Add Money
-                    </Button>
-                    <Button
-                      className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
-                      onClick={handleWallet}
-                    >
-                      Deposite Money
-                    </Button>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-
+              <div className="hidden md:block">
+                <Tooltip delayDuration={150}>
+                  <TooltipTrigger>
+                    <div className="relative cursor-pointer text-white hover:text-gray-300 transition duration-300 flex items-center space-x-5 border border-neutral-600 rounded-full p-1.5 px-3">
+                      <FaWallet size={20} />
+                      <p>{wallet}$</p>
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent className="bg-gradient-to-tr from-neutral-600 to-neutral-800">
+                    <div className="flex flex-col gap-5">
+                      <Button
+                        className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                        onClick={handleWallet}
+                      >
+                        Add Money
+                      </Button>
+                      <Button
+                        className="bg-gradient-to-br text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                        onClick={handleWallet}
+                      >
+                        Deposit Money
+                      </Button>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
               {isAuthenticated ? (
                 <div>
                   <div onClick={() => router.push("/dashboard/user")}>
-                    <div className="bg-white/20 rounded-full hover:bg-white/30  transition duration-300  fade-in-10 p-2 cursor-pointer">
+                    <div className="bg-white/20 rounded-full hover:bg-white/30 transition duration-300 fade-in-10 p-2 cursor-pointer">
                       <FaUser size={20} />
                     </div>
                   </div>
@@ -114,7 +120,7 @@ export const Appbar = () => {
                 <div>
                   <Button
                     onClick={openLoginModal}
-                    className="bg-gradient-to-br text-base font-semibold text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                    className="bg-gradient-to-br text-sm md:text-base font-semibold text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
                   >
                     Log In
                   </Button>
@@ -126,8 +132,8 @@ export const Appbar = () => {
       </div>
 
       {isLoginModalOpen && (
-        <div className="absolute top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70 z-50">
-          <div className="bg-gradient-to-tr from-neutral-600 to-neutral-800 rounded-lg border border-gray-600 shadow-xl p-6 w-96">
+        <div className="fixed top-0 left-0 h-screen w-full flex justify-center items-center bg-black/70 z-50">
+          <div className="bg-gradient-to-tr from-neutral-600 to-neutral-800 rounded-lg border border-gray-600 shadow-xl p-6 w-11/12 max-w-md">
             <h2 className="text-lg font-semibold mb-4 text-yellow-400">
               Log In
             </h2>

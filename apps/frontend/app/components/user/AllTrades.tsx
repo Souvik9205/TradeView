@@ -36,8 +36,18 @@ const AllTrades = ({ userId }: { userId: string }) => {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [selectedTrade, setSelectedTrade] = useState<Trade | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Fetch trades data using the getUserTrades function
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
+
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   useEffect(() => {
     const fetchTrades = async () => {
       try {
@@ -60,23 +70,28 @@ const AllTrades = ({ userId }: { userId: string }) => {
   };
 
   return (
-    <div className="p-6 bg-neutral-900/50 rounded-lg shadow-lg">
+    <div className="p-2 md:p-6 bg-neutral-900/50 rounded-lg shadow-lg">
       <TooltipProvider>
-        <ScrollArea className="h-[30vh] mt-4 bg-white/10 rounded-lg overflow-auto p-2">
+        <ScrollArea className="h-[30vh] bg-white/10 rounded-lg overflow-auto p-2">
           {trades.length > 0 ? (
-            <table className="w-full text-left">
+            <table className="w-full text-left table-auto">
               <thead>
                 <tr className="text-white/60 text-base font-semibold">
                   <th className="py-2">Coin</th>
-                  <th className="py-2">Buy Time</th>
-                  <th className="py-2">Sell Time</th>
-                  <th className="py-2">Buy Price</th>
-                  <th className="py-2">Volume</th>
+                  {isMobile && <th className="py-2">Status</th>}
+                  {!isMobile && (
+                    <>
+                      <th className="py-2">Buy Time</th>
+                      <th className="py-2">Sell Time</th>
+                      <th className="py-2">Buy Price</th>
+                      <th className="py-2">Volume</th>
+                    </>
+                  )}
                   <th className="py-2">Gain</th>
                 </tr>
               </thead>
               <tbody>
-                {trades.map((trade) => (
+                {[...trades].reverse().map((trade) => (
                   <Tooltip key={trade.id}>
                     <TooltipTrigger
                       asChild
@@ -86,19 +101,30 @@ const AllTrades = ({ userId }: { userId: string }) => {
                         className="cursor-pointer text-white/80 hover:bg-white/20 transition rounded-md"
                         onClick={() => handleRowClick(trade)}
                       >
-                        <td className="py-2">{trade.coin}</td>
-                        <td className="py-2">
-                          {trade.buyTime
-                            ? new Date(trade.buyTime).toLocaleString()
-                            : "N/A"}
-                        </td>
-                        <td className="py-2">
-                          {trade.sellTime
-                            ? new Date(trade.sellTime).toLocaleString()
-                            : "N/A"}
-                        </td>
-                        <td className="py-2">{trade.buyPrice.toFixed(2)}</td>
-                        <td className="py-2">{trade.volume}</td>
+                        <td className="py-2">{trade.coin.split("_")[0]}</td>
+                        {isMobile && (
+                          <td className="py-2">
+                            {trade.sellTime ? "Closed" : "Open"}
+                          </td>
+                        )}
+                        {!isMobile && (
+                          <>
+                            <td className="py-2">
+                              {trade.buyTime
+                                ? new Date(trade.buyTime).toLocaleString()
+                                : "N/A"}
+                            </td>
+                            <td className="py-2">
+                              {trade.sellTime
+                                ? new Date(trade.sellTime).toLocaleString()
+                                : "N/A"}
+                            </td>
+                            <td className="py-2">
+                              {trade.buyPrice.toFixed(2)}
+                            </td>
+                            <td className="py-2">{trade.volume}</td>
+                          </>
+                        )}
                         <td
                           className={`py-2 ${
                             trade.gain >= 0 ? "text-green-400" : "text-red-400"
@@ -137,17 +163,7 @@ const AllTrades = ({ userId }: { userId: string }) => {
 
         {/* Detailed Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {selectedTrade
-                  ? `Details of ${selectedTrade.coin}`
-                  : "Trade Details"}
-              </DialogTitle>
-              <DialogDescription>
-                View the full details of the selected trade below.
-              </DialogDescription>
-            </DialogHeader>
+          <DialogContent className="bg-gradient-to-bl from-neutral-800/90 to-neutral-900/90 backdrop-blur-lg">
             {selectedTrade && (
               <div className="text-white/80 space-y-2">
                 <p>

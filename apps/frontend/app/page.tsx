@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { cn } from "@/lib/utils";
 
 interface Ticker {
   firstPrice: string;
@@ -47,7 +48,8 @@ const MarketsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const [isMobile, setIsMobile] = useState(false);
+  const itemsPerPage = isMobile ? 15 : 8;
   const router = useRouter();
 
   const totalPages = Math.ceil(tickers.length / itemsPerPage);
@@ -56,6 +58,16 @@ const MarketsPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
+
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   useEffect(() => {
     const fetchTickers = async () => {
@@ -85,12 +97,15 @@ const MarketsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen mx-72 flex flex-col items-center">
-        <div className="flex gap-2 h-3/5 w-full">
-          <Skeleton className="w-2/3 h-full" />
-          <Skeleton className="w-1/3 h-full" />
+      <div className="flex flex-col h-screen w-full px-72">
+        <div className="space-y-2 h-[60vh] w-full flex gap-3 items-center justify-between">
+          <div className="w-2/3 h-[55vh] flex flex-col gap-2 py-20">
+            <Skeleton className="h-2/3 w-5/6" />
+            <Skeleton className="h-1/3 w-11/12" />
+          </div>
+          <Skeleton className="h-[55vh] w-1/3 py-6" />
         </div>
-        <Skeleton className="h-2/5 w-full" />
+        <Skeleton className="h-[30vh] w-full rounded-xl" />
       </div>
     );
   }
@@ -106,35 +121,38 @@ const MarketsPage = () => {
   return (
     <div className="relative">
       <div className="">
-        <div className="mx-72 flex gap-10 flex-col ">
-          <section id="main" className="w-full mt-10">
+        <div className="md:mx-72 flex gap-2 md:gap-10 flex-col ">
+          <section id="main" className="w-full md:mt-10">
             <CryptoPage />
           </section>
-
           <section
             id="markets"
-            className="bg-gradient-to-br from-neutral-700 to-neutral-900 border border-gray-500 w-full min-h-screen rounded-xl p-6 mb-10"
+            className="bg-gradient-to-br from-neutral-700 to-neutral-900 border border-gray-500 w-full rounded-xl p-4 md:p-6 mb-10"
           >
-            <h2 className="text-3xl font-extrabold text-neutral-300 mb-4 text-lg">
+            <h2 className="md:text-xxl font-extrabold text-neutral-300 mb-4 text-lg">
               Markets
             </h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-left border border-gray-500 text-white rounded-lg overflow-hidden shadow-lg">
+              <table className="w-full text-left border border-gray-500 text-white rounded-lg overflow-hidden shadow-lg">
                 <thead className="bg-yellow-400 text-black border-2  border-gray-400">
                   <tr>
-                    <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
+                    <th className="px-6 py-3 font-bold text-sm md:text-base uppercase tracking-wider">
                       Coin
                     </th>
-                    <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
+                    <th className="px-6 py-3 font-bold text-sm md:text-base uppercase tracking-wider">
                       Price
                     </th>
-                    <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
-                      24h Trades
-                    </th>
-                    <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
-                      24h Volume
-                    </th>
-                    <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
+                    {!isMobile && (
+                      <>
+                        <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
+                          24h Trades
+                        </th>
+                        <th className="px-6 py-3 font-bold text-base uppercase tracking-wider">
+                          24h Volume
+                        </th>
+                      </>
+                    )}
+                    <th className="px-6 py-3 font-bold text-sm md:text-base uppercase tracking-wider">
                       24h Change
                     </th>
                   </tr>
@@ -153,32 +171,42 @@ const MarketsPage = () => {
                           router.push(`/trade/${ticker.symbol}`);
                         }}
                       >
-                        <td className="px-6 py-4 flex items-center gap-3">
+                        <td className="px-2 md:px-6 py-4 flex items-center md:gap-3">
                           <img
                             src={logoPath}
                             alt={coinName}
-                            className="w-8 h-8 rounded-full"
+                            className="w-6 h-6 md:w-8 md:h-8 rounded-full"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src =
                                 "/market/default.png";
                             }}
                           />
-                          <div className="ml-4">
-                            <span className="block text-lg font-semibold text-white/75">
+                          <div className="ml-1 md:ml-4">
+                            <span className="block text-base md:text-lg font-semibold text-white/75">
                               {fullName}
                             </span>
-                            <span className="block text-sm text-gray-400/80 uppercase">
-                              {coinName}
-                            </span>
+                            {!isMobile && (
+                              <span className="block text-xs text-gray-400/80 uppercase">
+                                {isMobile ? fullName : coinName}
+                              </span>
+                            )}
                           </div>
                         </td>
-                        <td className="px-6 py-4">${ticker.lastPrice}</td>
-                        <td className="px-6 py-4">{ticker.trades}</td>
-                        <td className="px-6 py-4">
-                          {formatNumber(ticker.quoteVolume)}
+                        <td className="px-6 py-4 text-sm md:text-base">
+                          ${ticker.lastPrice}
                         </td>
+                        {!isMobile && (
+                          <>
+                            <td className="px-2 md:px-6 py-4">
+                              {ticker.trades}
+                            </td>
+                            <td className="px-2 md:px-6 py-4">
+                              {formatNumber(ticker.quoteVolume)}
+                            </td>
+                          </>
+                        )}
                         <td
-                          className={`px-6 py-4 font-semibold ${
+                          className={`px-6 py-4 font-semibold text-sm md:text-base ${
                             parseFloat(ticker.priceChangePercent) > 0
                               ? "text-green-400"
                               : "text-red-400"
@@ -197,10 +225,10 @@ const MarketsPage = () => {
               </table>
             </div>
 
-            {/* Pagination */}
             <div className="mt-6 flex justify-center">
               <Pagination>
                 <PaginationContent>
+                  {/* Previous Button */}
                   <PaginationItem>
                     <PaginationPrevious
                       href="#"
@@ -209,8 +237,22 @@ const MarketsPage = () => {
                       }
                     />
                   </PaginationItem>
+
+                  {/* Show fewer page links on smaller screens */}
                   {Array.from({ length: totalPages }).map((_, idx) => (
-                    <PaginationItem key={idx}>
+                    <PaginationItem
+                      key={idx}
+                      className={cn(
+                        "hidden md:block",
+                        idx + 1 === currentPage ||
+                          idx + 1 === 1 ||
+                          idx + 1 === totalPages
+                          ? "block"
+                          : currentPage - idx <= 1 || idx - currentPage <= 1
+                            ? "block"
+                            : "hidden"
+                      )}
+                    >
                       <PaginationLink
                         href="#"
                         isActive={currentPage === idx + 1}
@@ -220,9 +262,15 @@ const MarketsPage = () => {
                       </PaginationLink>
                     </PaginationItem>
                   ))}
-                  <PaginationItem>
-                    <PaginationEllipsis />
-                  </PaginationItem>
+
+                  {/* Ellipsis for skipped pages */}
+                  {currentPage < totalPages - 2 && (
+                    <PaginationItem className="hidden md:block">
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+
+                  {/* Next Button */}
                   <PaginationItem>
                     <PaginationNext
                       href="#"

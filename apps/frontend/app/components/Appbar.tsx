@@ -7,7 +7,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { FaWallet, FaUser } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -15,6 +15,7 @@ import OtpModal from "./OtpModal";
 import axios from "axios";
 import { useAuthStore } from "../[utils]/AuthStore";
 import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Appbar = () => {
   const router = useRouter();
@@ -22,15 +23,22 @@ export const Appbar = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isOtpModalOpen, setIsOtpModalOpen] = useState(false);
   const [email, setEmail] = useState("");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthLoaded, setIsAuthLoaded] = useState(false);
   const { isAuthenticated } = useAuthStore();
   const { toast } = useToast();
 
   const backendUrl = "http://localhost:3121";
+  useEffect(() => {
+    // Simulate checking auth status (Replace with actual implementation)
+    const loadAuthStatus = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setIsAuthLoaded(true);
+    };
+    loadAuthStatus();
+  }, []);
 
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
-    setIsMobileMenuOpen(false);
   };
   const closeLoginModal = () => setIsLoginModalOpen(false);
   const openOtpModal = () => setIsOtpModalOpen(true);
@@ -108,23 +116,27 @@ export const Appbar = () => {
                   </TooltipContent>
                 </Tooltip>
               </div>
-              {isAuthenticated ? (
-                <div>
-                  <div onClick={() => router.push("/dashboard/user")}>
-                    <div className="bg-white/20 rounded-full hover:bg-white/30 transition duration-300 fade-in-10 p-2 cursor-pointer">
-                      <FaUser size={20} />
+              {isAuthLoaded ? (
+                isAuthenticated ? (
+                  <div>
+                    <div onClick={() => router.push("/dashboard/user")}>
+                      <div className="bg-white/20 rounded-full hover:bg-white/30 transition duration-300 fade-in-10 p-2 cursor-pointer">
+                        <FaUser size={20} />
+                      </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div>
+                    <Button
+                      onClick={openLoginModal}
+                      className="bg-gradient-to-br text-sm md:text-base font-semibold text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
+                    >
+                      Log In
+                    </Button>
+                  </div>
+                )
               ) : (
-                <div>
-                  <Button
-                    onClick={openLoginModal}
-                    className="bg-gradient-to-br text-sm md:text-base font-semibold text-black/90 from-yellow-300/80 to-yellow-700/80 hover:bg-yellow-400"
-                  >
-                    Log In
-                  </Button>
-                </div>
+                <Skeleton className="w-10 h-10 rounded-full" />
               )}
             </div>
           </TooltipProvider>

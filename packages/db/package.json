@@ -6,9 +6,7 @@
     "./client": "./src/index.ts"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "npx prisma generate",
-    "postinstall": "npx prisma generate"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",

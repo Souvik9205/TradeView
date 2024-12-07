@@ -58,6 +58,8 @@ const MarketsPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+  // const proxyUrl = "http://localhost:3129/api/v1";
+  const proxyUrl = "https://proxyserver-dayq.onrender.com/api/v1";
 
   useEffect(() => {
     const checkScreenSize = () => {
@@ -72,7 +74,7 @@ const MarketsPage = () => {
   useEffect(() => {
     const fetchTickers = async () => {
       try {
-        const response = await fetch("http://localhost:3129/api/v1/tickers");
+        const response = await fetch(`${proxyUrl}/tickers`);
         if (!response.ok) {
           throw new Error("Failed to fetch tickers");
         }

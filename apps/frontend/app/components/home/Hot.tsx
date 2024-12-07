@@ -118,9 +118,7 @@ const CryptoPage = () => {
   useEffect(() => {
     const fetchCryptocurrencyData = async () => {
       try {
-        const { data } = await axios.get(
-          "http://localhost:3129/api/v1/tickers"
-        );
+        const { data } = await axios.get(`${backendUrl}/tickers`);
         const filteredData = CRYPTO_SYMBOLS.map((symbol) => {
           const coinData = data.find((item: any) => item.symbol === symbol);
           if (coinData) {

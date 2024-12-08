@@ -1,8 +1,8 @@
 import axios from "axios";
 import { ApiResponse, Buy, Sell } from "./types";
 
-// const BASE_URL = "http://localhost:3121";
-const BASE_URL = "https://server-v7fg.onrender.com";
+const BASE_URL = "http://localhost:3121";
+// const BASE_URL = "https://server-v7fg.onrender.com";
 const token = localStorage.getItem("token");
 
 export async function TradeClient(data: Buy): Promise<ApiResponse<Buy>> {

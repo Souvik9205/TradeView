@@ -44,8 +44,8 @@ const CryptoPage = () => {
   const login = useAuthStore((state) => state.login);
   const { toast } = useToast();
 
-  // const backendUrl = "http://localhost:3121";
-  const backendUrl = "https://server-v7fg.onrender.com";
+  const backendUrl = "http://localhost:3121";
+  // const backendUrl = "https://server-v7fg.onrender.com";
 
   const emailForm = useFormik({
     initialValues: {

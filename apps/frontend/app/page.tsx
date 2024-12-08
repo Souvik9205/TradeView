@@ -58,8 +58,8 @@ const MarketsPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  // const proxyUrl = "http://localhost:3129/api/v1";
-  const proxyUrl = "https://proxyserver-dayq.onrender.com/api/v1";
+  const proxyUrl = "http://localhost:3129/api/v1";
+  // const proxyUrl = "https://proxyserver-dayq.onrender.com/api/v1";
 
   useEffect(() => {
     const checkScreenSize = () => {

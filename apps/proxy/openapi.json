@@ -162,9 +162,7 @@
   "paths": {
     "/api/v1/account": {
       "get": {
-        "tags": [
-          "Account"
-        ],
+        "tags": ["Account"],
         "summary": "Get account.",
         "description": "**Instruction:** `accountQuery`",
         "parameters": [
@@ -250,9 +248,7 @@
         "operationId": "get_account"
       },
       "patch": {
-        "tags": [
-          "Account"
-        ],
+        "tags": ["Account"],
         "summary": "Update account.",
         "description": "Update account settings.\n\n**Instruction:** `accountUpdate`",
         "parameters": [
@@ -363,9 +359,7 @@
     },
     "/api/v1/assets": {
       "get": {
-        "tags": [
-          "Assets"
-        ],
+        "tags": ["Assets"],
         "summary": "Get assets.",
         "description": "Retrieves all the assets that are supported by the exchange.",
         "responses": {
@@ -398,9 +392,7 @@
     },
     "/api/v1/collateral": {
       "get": {
-        "tags": [
-          "Assets"
-        ],
+        "tags": ["Assets"],
         "summary": "Get collateral.",
         "description": "Get collateral parameters for assets.",
         "responses": {
@@ -433,9 +425,7 @@
     },
     "/api/v1/borrowLend/positions": {
       "get": {
-        "tags": [
-          "Borrow Lend"
-        ],
+        "tags": ["Borrow Lend"],
         "summary": "Get borrow lend positions.",
         "description": "Retrieves all the open borrow lending positions for the account.\n\n**Instruction:** `borrowLendPositionQuery`",
         "parameters": [
@@ -526,9 +516,7 @@
     },
     "/api/v1/borrowLend": {
       "post": {
-        "tags": [
-          "Borrow Lend"
-        ],
+        "tags": ["Borrow Lend"],
         "summary": "Execute borrow lend.",
         "description": "**Instruction:** `borrowLendExecute`",
         "parameters": [
@@ -629,9 +617,7 @@
     },
     "/api/v1/borrowLend/markets": {
       "get": {
-        "tags": [
-          "Borrow Lend Markets"
-        ],
+        "tags": ["Borrow Lend Markets"],
         "summary": "Get borrow lend markets.",
         "responses": {
           "200": {
@@ -663,9 +649,7 @@
     },
     "/api/v1/borrowLend/markets/history": {
       "get": {
-        "tags": [
-          "Borrow Lend Markets"
-        ],
+        "tags": ["Borrow Lend Markets"],
         "summary": "Get borrow lend market history.",
         "parameters": [
           {
@@ -721,9 +705,7 @@
     },
     "/api/v1/capital": {
       "get": {
-        "tags": [
-          "Capital"
-        ],
+        "tags": ["Capital"],
         "summary": "Get balances.",
         "description": "Retrieves account balances and the state of the balances (locked or\navailable).\n\nLocked assets are those that are currently in an open order.\n\n**Instruction:** `balanceQuery`",
         "parameters": [
@@ -814,9 +796,7 @@
     },
     "/api/v1/capital/collateral": {
       "get": {
-        "tags": [
-          "Capital"
-        ],
+        "tags": ["Capital"],
         "summary": "Get collateral.",
         "description": "Retrieves collateral information for an account.\n\n**Instruction:** `collateralQuery`",
         "parameters": [
@@ -915,9 +895,7 @@
     },
     "/wapi/v1/capital/deposits": {
       "get": {
-        "tags": [
-          "Capital"
-        ],
+        "tags": ["Capital"],
         "summary": "Get deposits.",
         "description": "Retrieves deposit history.\n\n**Instruction:** `depositQueryAll`",
         "parameters": [
@@ -1066,9 +1044,7 @@
     },
     "/wapi/v1/capital/deposit/address": {
       "get": {
-        "tags": [
-          "Capital"
-        ],
+        "tags": ["Capital"],
         "summary": "Get deposit address.",
         "description": "Retrieves the user specific deposit address if the user were to deposit\non the specified blockchain.\n\n**Instruction:** `depositAddressQuery`",
         "parameters": [
@@ -1187,9 +1163,7 @@
     },
     "/api/v1/markets": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get markets.",
         "description": "Retrieves all the markets that are supported by the exchange.",
         "responses": {
@@ -1222,9 +1196,7 @@
     },
     "/api/v1/market": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get market.",
         "description": "Retrieves a market supported by the exchange.",
         "parameters": [
@@ -1276,9 +1248,7 @@
     },
     "/api/v1/ticker": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get ticker.",
         "description": "Retrieves summarised statistics for the last 24 hours for the given\nmarket symbol.",
         "parameters": [
@@ -1333,9 +1303,7 @@
     },
     "/api/v1/tickers": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get tickers.",
         "description": "Retrieves summarised statistics for the last 24 hours for all market\nsymbols.",
         "responses": {
@@ -1368,9 +1336,7 @@
     },
     "/api/v1/depth": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get depth.",
         "description": "Retrieves the order book depth for a given market symbol.",
         "parameters": [
@@ -1422,9 +1388,7 @@
     },
     "/api/v1/klines": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get K-lines.",
         "description": "Get K-Lines for the given market symbol, optionally providing a\n`startTime` and `endTime`. If no `startTime` is provided, the interval\nduration will be used. If no `endTime` is provided, the current time\nwill be used.",
         "parameters": [
@@ -1513,9 +1477,7 @@
     },
     "/api/v1/markPrice": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get mark price.",
         "description": "Retrieves mark price, index price and funding rate for the given\nmarket symbol.",
         "parameters": [
@@ -1567,9 +1529,7 @@
     },
     "/api/v1/openInterest": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get open interest.",
         "description": "Retrieves the current open interest for the given market.",
         "parameters": [
@@ -1621,9 +1581,7 @@
     },
     "/api/v1/fundingRates": {
       "get": {
-        "tags": [
-          "Markets"
-        ],
+        "tags": ["Markets"],
         "summary": "Get funding interval rates.",
         "description": "Funding interval rate history for futures.",
         "parameters": [
@@ -1744,9 +1702,7 @@
     },
     "/api/v1/order": {
       "get": {
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "summary": "Get open order.",
         "description": "Retrieves an open order from the order book. This only returns the order\nif it is resting on the order book (i.e. has not been completely filled,\nexpired, or cancelled).\n\nOne of `orderId` or `clientId` must be specified. If both are specified\nthen the request will be rejected.\n\n**Instruction:** `orderQuery`",
         "parameters": [
@@ -1876,9 +1832,7 @@
         "operationId": "get_order"
       },
       "post": {
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "summary": "Execute order.",
         "description": "Submits an order to the matching engine for execution.\n\n**Instruction:** `orderExecute`",
         "parameters": [
@@ -1994,9 +1948,7 @@
         "operationId": "execute_order"
       },
       "delete": {
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "summary": "Cancel open order.",
         "description": "Cancels an open order from the order book.\n\nOne of `orderId` or `clientId` must be specified. If both are specified\nthen the request will be rejected.\n\n**Instruction:** `orderCancel`",
         "parameters": [
@@ -2107,9 +2059,7 @@
     },
     "/api/v1/orders": {
       "get": {
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "summary": "Get open orders.",
         "description": "Retrieves all open orders. If a symbol is provided, only open orders for\nthat market will be returned, otherwise all open orders are\nreturned.\n\n**Instruction:** `orderQueryAll`",
         "parameters": [
@@ -2209,9 +2159,7 @@
         "operationId": "get_open_orders"
       },
       "delete": {
-        "tags": [
-          "Order"
-        ],
+        "tags": ["Order"],
         "summary": "Cancel open orders.",
         "description": "Cancels all open orders on the specified market.\n\n**Instruction:** `orderCancelAll`",
         "parameters": [
@@ -2325,9 +2273,7 @@
     },
     "/api/v1/position": {
       "get": {
-        "tags": [
-          "Futures"
-        ],
+        "tags": ["Futures"],
         "summary": "Get open positions.",
         "description": "Retrieves account position summary.\n\n**Instruction:** `positionQuery`",
         "parameters": [
@@ -2428,9 +2374,7 @@
     },
     "/api/v1/rfq/quote": {
       "post": {
-        "tags": [
-          "Request For Quote"
-        ],
+        "tags": ["Request For Quote"],
         "summary": "Submit quote.",
         "description": "This endpoint allows a maker to submit a quote in response to an RFQ.\nThe submitted quote will be evaluated and, if valid, may be accepted by\nthe taker within the specified time window.\n\n**Instruction:** `quoteSubmit`",
         "parameters": [
@@ -2538,9 +2482,7 @@
     },
     "/api/v1/status": {
       "get": {
-        "tags": [
-          "System"
-        ],
+        "tags": ["System"],
         "summary": "Status.",
         "description": "Get the system status, and the status message, if any.",
         "responses": {
@@ -2560,9 +2502,7 @@
     },
     "/api/v1/ping": {
       "get": {
-        "tags": [
-          "System"
-        ],
+        "tags": ["System"],
         "summary": "Ping.",
         "description": "Responds with `pong`.",
         "responses": {
@@ -2582,9 +2522,7 @@
     },
     "/api/v1/time": {
       "get": {
-        "tags": [
-          "System"
-        ],
+        "tags": ["System"],
         "summary": "Get system time.",
         "description": "Retrieves the current system time.",
         "responses": {
@@ -2604,9 +2542,7 @@
     },
     "/api/v1/trades": {
       "get": {
-        "tags": [
-          "Trades"
-        ],
+        "tags": ["Trades"],
         "summary": "Get recent trades.",
         "description": "Retrieve the most recent trades for a symbol. This is public data and\nis not specific to any account.\n\nThe maximum available recent trades is `1000`. If you need more than\n`1000` trades use the historical trades endpoint.",
         "parameters": [
@@ -2674,9 +2610,7 @@
     },
     "/api/v1/trades/history": {
       "get": {
-        "tags": [
-          "Trades"
-        ],
+        "tags": ["Trades"],
         "summary": "Get historical trades.",
         "description": "Retrieves all historical trades for the given symbol. This is public\ntrade data and is not specific to any account.",
         "parameters": [
@@ -2755,9 +2689,7 @@
     },
     "/wapi/v1/capital/withdrawals": {
       "get": {
-        "tags": [
-          "Capital"
-        ],
+        "tags": ["Capital"],
         "summary": "Get withdrawals.",
         "description": "Retrieves withdrawal history.\n\n**Instruction:** `withdrawalQueryAll`",
         "parameters": [
@@ -2904,9 +2836,7 @@
         "operationId": "get_withdrawals"
       },
       "post": {
-        "tags": [
-          "Capital"
-        ],
+        "tags": ["Capital"],
         "summary": "Request withdrawal.",
         "description": "Requests a withdrawal from the exchange.\n\nThe `twoFactorToken` field is required if the withdrawal address is not\nan address that is configured in the address book to not require\n2FA. These addresses can be configured [here](https://backpack.exchange/settings/withdrawal-addresses?twoFactorWithdrawalAddress=true).\n\n**Instruction:** `withdraw`",
         "parameters": [
@@ -3044,9 +2974,7 @@
     },
     "/wapi/v1/history/borrowLend": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get borrow history.",
         "description": "History of borrow and lend operations for the account.\n\n**Instruction:** `borrowHistoryQueryAll`",
         "parameters": [
@@ -3267,9 +3195,7 @@
     },
     "/wapi/v1/history/interest": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get interest history.",
         "description": "History of the interest payments for borrows and lends for the account.\n\n**Instruction:** `interestHistoryQueryAll`",
         "parameters": [
@@ -3468,9 +3394,7 @@
     },
     "/wapi/v1/history/borrowLend/positions": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get borrow position history.",
         "description": "History of borrow and lend positions for the account.",
         "parameters": [
@@ -3623,9 +3547,7 @@
     },
     "/wapi/v1/history/fills": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get fill history.",
         "description": "Retrieves historical fills, with optional filtering for a specific order\nor symbol.\n\n**Instruction:** `fillHistoryQueryAll`",
         "parameters": [
@@ -3848,9 +3770,7 @@
     },
     "/wapi/v1/history/funding": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get funding payments.",
         "description": "Users funding payment history for futures.\n\n**Instruction:** `fundingHistoryQueryAll`",
         "parameters": [
@@ -4039,9 +3959,7 @@
     },
     "/wapi/v1/history/orders": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get order history.",
         "description": "Retrieves the order history for the user. This includes orders that have\nbeen filled and are no longer on the book. It may include orders\nthat are on the book, but the `/orders` endpoint contains more up to\ndate data.\n\n**Instruction:** `orderHistoryQueryAll`",
         "parameters": [
@@ -4229,9 +4147,7 @@
     },
     "/wapi/v1/history/pnl": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get profit and loss history.",
         "description": "History of profit and loss realization for an account.\n\n**Instruction:** `pnlHistoryQueryAll`",
         "parameters": [
@@ -4420,9 +4336,7 @@
     },
     "/wapi/v1/history/settlement": {
       "get": {
-        "tags": [
-          "History"
-        ],
+        "tags": ["History"],
         "summary": "Get settlement history.",
         "description": "History of settlement operations for the account.\n\n**Instruction:** `settlementHistoryQueryAll`",
         "parameters": [
@@ -4687,12 +4601,7 @@
       },
       "AccountWithdrawalPayload": {
         "type": "object",
-        "required": [
-          "address",
-          "blockchain",
-          "quantity",
-          "symbol"
-        ],
+        "required": ["address", "blockchain", "quantity", "symbol"],
         "properties": {
           "address": {
             "type": "string",
@@ -4774,10 +4683,7 @@
       },
       "ApiErrorResponse": {
         "type": "object",
-        "required": [
-          "code",
-          "message"
-        ],
+        "required": ["code", "message"],
         "properties": {
           "code": {
             "$ref": "#/components/schemas/ApiErrorCode"
@@ -4860,11 +4766,7 @@
       },
       "Balance": {
         "type": "object",
-        "required": [
-          "available",
-          "locked",
-          "staked"
-        ],
+        "required": ["available", "locked", "staked"],
         "properties": {
           "available": {
             "type": "string",
@@ -4898,11 +4800,7 @@
       "BorrowLendBookState": {
         "type": "string",
         "description": "Borrow lend book state",
-        "enum": [
-          "Open",
-          "Closed",
-          "RepayOnly"
-        ]
+        "enum": ["Open", "Closed", "RepayOnly"]
       },
       "BorrowLendEventType": {
         "type": "string",
@@ -4917,11 +4815,7 @@
       },
       "BorrowLendExecutePayload": {
         "type": "object",
-        "required": [
-          "quantity",
-          "side",
-          "symbol"
-        ],
+        "required": ["quantity", "side", "symbol"],
         "properties": {
           "quantity": {
             "type": "string",
@@ -5119,12 +5013,7 @@
       },
       "BorrowLendMarketHistoryInterval": {
         "type": "string",
-        "enum": [
-          "1d",
-          "1w",
-          "1month",
-          "1year"
-        ]
+        "enum": ["1d", "1w", "1month", "1year"]
       },
       "BorrowLendMovement": {
         "type": "object",
@@ -5243,10 +5132,7 @@
       },
       "BorrowLendPositionState": {
         "type": "string",
-        "enum": [
-          "Open",
-          "Closed"
-        ]
+        "enum": ["Open", "Closed"]
       },
       "BorrowLendPositionWithMargin": {
         "type": "object",
@@ -5340,10 +5226,7 @@
       },
       "BorrowLendSide": {
         "type": "string",
-        "enum": [
-          "Borrow",
-          "Lend"
-        ]
+        "enum": ["Borrow", "Lend"]
       },
       "BorrowLendSource": {
         "type": "string",
@@ -5421,10 +5304,7 @@
       },
       "CollateralFunction": {
         "type": "object",
-        "required": [
-          "weight",
-          "kind"
-        ],
+        "required": ["weight", "kind"],
         "properties": {
           "weight": {
             "type": "string",
@@ -5457,15 +5337,11 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "type"
-            ],
+            "required": ["type"],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": [
-                  "identity"
-                ],
+                "enum": ["identity"],
                 "example": "identity"
               }
             }
@@ -5479,15 +5355,11 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "type"
-            ],
+            "required": ["type"],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": [
-                  "inverseSqrt"
-                ],
+                "enum": ["inverseSqrt"],
                 "example": "inverseSqrt"
               }
             }
@@ -5499,12 +5371,7 @@
       },
       "CollateralSummary": {
         "type": "object",
-        "required": [
-          "symbol",
-          "imfFunction",
-          "mmfFunction",
-          "haircutFunction"
-        ],
+        "required": ["symbol", "imfFunction", "mmfFunction", "haircutFunction"],
         "properties": {
           "symbol": {
             "type": "string",
@@ -5625,9 +5492,7 @@
       },
       "DepositAddress": {
         "type": "object",
-        "required": [
-          "address"
-        ],
+        "required": ["address"],
         "properties": {
           "address": {
             "type": "string",
@@ -5665,12 +5530,7 @@
       },
       "Depth": {
         "type": "object",
-        "required": [
-          "asks",
-          "bids",
-          "lastUpdateId",
-          "timestamp"
-        ],
+        "required": ["asks", "bids", "lastUpdateId", "timestamp"],
         "properties": {
           "asks": {
             "type": "array",
@@ -5708,24 +5568,12 @@
         },
         "example": {
           "asks": [
-            [
-              "21.9",
-              "500.123"
-            ],
-            [
-              "22.1",
-              "2321.11"
-            ]
+            ["21.9", "500.123"],
+            ["22.1", "2321.11"]
           ],
           "bids": [
-            [
-              "20.12",
-              "255.123"
-            ],
-            [
-              "20.5",
-              "499.555"
-            ]
+            ["20.12", "255.123"],
+            ["20.5", "499.555"]
           ],
           "lastUpdateId": "1684026955123",
           "timestamp": 1684026955123
@@ -5743,11 +5591,7 @@
       },
       "FundingIntervalRate": {
         "type": "object",
-        "required": [
-          "symbol",
-          "intervalEndTimestamp",
-          "fundingRate"
-        ],
+        "required": ["symbol", "intervalEndTimestamp", "fundingRate"],
         "properties": {
           "symbol": {
             "type": "string",
@@ -6001,17 +5845,11 @@
       },
       "InterestPaymentSource": {
         "type": "string",
-        "enum": [
-          "UnrealizedPnl",
-          "BorrowLend"
-        ]
+        "enum": ["UnrealizedPnl", "BorrowLend"]
       },
       "InverseSqrtFunction": {
         "type": "object",
-        "required": [
-          "base",
-          "positiveCurvePenalty"
-        ],
+        "required": ["base", "positiveCurvePenalty"],
         "properties": {
           "base": {
             "type": "string",
@@ -6025,13 +5863,7 @@
       },
       "Kline": {
         "type": "object",
-        "required": [
-          "start",
-          "end",
-          "volume",
-          "quoteVolume",
-          "trades"
-        ],
+        "required": ["start", "end", "volume", "quoteVolume", "trades"],
         "properties": {
           "start": {
             "type": "string",
@@ -6093,11 +5925,7 @@
       },
       "LeverageFilter": {
         "type": "object",
-        "required": [
-          "minLeverage",
-          "maxLeverage",
-          "stepSize"
-        ],
+        "required": ["minLeverage", "maxLeverage", "stepSize"],
         "properties": {
           "minLeverage": {
             "type": "integer",
@@ -6361,12 +6189,7 @@
       },
       "Market": {
         "type": "object",
-        "required": [
-          "symbol",
-          "baseSymbol",
-          "quoteSymbol",
-          "filters"
-        ],
+        "required": ["symbol", "baseSymbol", "quoteSymbol", "filters"],
         "properties": {
           "symbol": {
             "type": "string",
@@ -6414,10 +6237,7 @@
       },
       "MarketAsset": {
         "type": "object",
-        "required": [
-          "symbol",
-          "tokens"
-        ],
+        "required": ["symbol", "tokens"],
         "properties": {
           "symbol": {
             "description": "Symbol of the asset, e.g. ETH.",
@@ -6544,10 +6364,7 @@
       },
       "OpenInterest": {
         "type": "object",
-        "required": [
-          "symbol",
-          "timestamp"
-        ],
+        "required": ["symbol", "timestamp"],
         "properties": {
           "symbol": {
             "type": "string",
@@ -6690,9 +6507,7 @@
       "OrderAck": {
         "type": "object",
         "description": "Response for order execute when the order is accepted but not yet executed.",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "properties": {
           "id": {
             "type": "string",
@@ -6702,10 +6517,7 @@
       },
       "OrderBookFilters": {
         "type": "object",
-        "required": [
-          "price",
-          "quantity"
-        ],
+        "required": ["price", "quantity"],
         "properties": {
           "price": {
             "description": "Defines the price rules for the order book.",
@@ -6744,9 +6556,7 @@
       },
       "OrderCancelAllPayload": {
         "type": "object",
-        "required": [
-          "symbol"
-        ],
+        "required": ["symbol"],
         "properties": {
           "symbol": {
             "type": "string",
@@ -6756,9 +6566,7 @@
       },
       "OrderCancelPayload": {
         "type": "object",
-        "required": [
-          "symbol"
-        ],
+        "required": ["symbol"],
         "properties": {
           "clientId": {
             "type": "integer",
@@ -6777,11 +6585,7 @@
       },
       "OrderExecutePayload": {
         "type": "object",
-        "required": [
-          "orderType",
-          "side",
-          "symbol"
-        ],
+        "required": ["orderType", "side", "symbol"],
         "properties": {
           "clientId": {
             "type": "integer",
@@ -6997,24 +6801,17 @@
       },
       "OrderTypeEnum": {
         "type": "string",
-        "enum": [
-          "Market",
-          "Limit"
-        ]
+        "enum": ["Market", "Limit"]
       },
       "OrderType_LimitOrder": {
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "orderType"
-            ],
+            "required": ["orderType"],
             "properties": {
               "orderType": {
                 "type": "string",
-                "enum": [
-                  "Limit"
-                ],
+                "enum": ["Limit"],
                 "example": "Limit"
               }
             }
@@ -7028,15 +6825,11 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "orderType"
-            ],
+            "required": ["orderType"],
             "properties": {
               "orderType": {
                 "type": "string",
-                "enum": [
-                  "Market"
-                ],
+                "enum": ["Market"],
                 "example": "Market"
               }
             }
@@ -7058,11 +6851,7 @@
       },
       "PnlPayment": {
         "type": "object",
-        "required": [
-          "pnlRealized",
-          "symbol",
-          "timestamp"
-        ],
+        "required": ["pnlRealized", "symbol", "timestamp"],
         "properties": {
           "pnlRealized": {
             "type": "string",
@@ -7098,15 +6887,11 @@
         "allOf": [
           {
             "type": "object",
-            "required": [
-              "type"
-            ],
+            "required": ["type"],
             "properties": {
               "type": {
                 "type": "string",
-                "enum": [
-                  "sqrt"
-                ],
+                "enum": ["sqrt"],
                 "example": "sqrt"
               }
             }
@@ -7118,10 +6903,7 @@
       },
       "PriceBandMarkPrice": {
         "type": "object",
-        "required": [
-          "maxMultiplier",
-          "minMultiplier"
-        ],
+        "required": ["maxMultiplier", "minMultiplier"],
         "properties": {
           "maxMultiplier": {
             "type": "string",
@@ -7137,9 +6919,7 @@
       },
       "PriceBandMeanPremium": {
         "type": "object",
-        "required": [
-          "tolerancePct"
-        ],
+        "required": ["tolerancePct"],
         "properties": {
           "tolerancePct": {
             "type": "string",
@@ -7150,10 +6930,7 @@
       },
       "PriceFilter": {
         "type": "object",
-        "required": [
-          "minPrice",
-          "tickSize"
-        ],
+        "required": ["minPrice", "tickSize"],
         "properties": {
           "minPrice": {
             "type": "string",
@@ -7216,10 +6993,7 @@
       },
       "QuantityFilter": {
         "type": "object",
-        "required": [
-          "minQuantity",
-          "stepSize"
-        ],
+        "required": ["minQuantity", "stepSize"],
         "properties": {
           "minQuantity": {
             "type": "string",
@@ -7240,12 +7014,7 @@
       },
       "Quote": {
         "type": "object",
-        "required": [
-          "rfqId",
-          "quoteId",
-          "price",
-          "status"
-        ],
+        "required": ["rfqId", "quoteId", "price", "status"],
         "properties": {
           "rfqId": {
             "type": "string",
@@ -7280,11 +7049,7 @@
       },
       "QuotePayload": {
         "type": "object",
-        "required": [
-          "rfqId",
-          "bidPrice",
-          "askPrice"
-        ],
+        "required": ["rfqId", "bidPrice", "askPrice"],
         "properties": {
           "rfqId": {
             "type": "string",
@@ -7309,20 +7074,11 @@
       },
       "SelfTradePrevention": {
         "type": "string",
-        "enum": [
-          "RejectTaker",
-          "RejectMaker",
-          "RejectBoth",
-          "Allow"
-        ]
+        "enum": ["RejectTaker", "RejectMaker", "RejectBoth", "Allow"]
       },
       "Settlement": {
         "type": "object",
-        "required": [
-          "quantity",
-          "source",
-          "timestamp"
-        ],
+        "required": ["quantity", "source", "timestamp"],
         "properties": {
           "quantity": {
             "type": "string",
@@ -7378,17 +7134,11 @@
       },
       "Side": {
         "type": "string",
-        "enum": [
-          "Bid",
-          "Ask"
-        ]
+        "enum": ["Bid", "Ask"]
       },
       "SqrtFunction": {
         "type": "object",
-        "required": [
-          "base",
-          "factor"
-        ],
+        "required": ["base", "factor"],
         "properties": {
           "base": {
             "type": "string",
@@ -7402,16 +7152,11 @@
       },
       "Status": {
         "type": "string",
-        "enum": [
-          "Ok",
-          "Maintenance"
-        ]
+        "enum": ["Ok", "Maintenance"]
       },
       "StatusAndMessage": {
         "type": "object",
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "properties": {
           "status": {
             "description": "Status of the system.",
@@ -7507,11 +7252,7 @@
       },
       "TimeInForce": {
         "type": "string",
-        "enum": [
-          "GTC",
-          "IOC",
-          "FOK"
-        ]
+        "enum": ["GTC", "IOC", "FOK"]
       },
       "Token": {
         "type": "object",
@@ -7717,37 +7458,22 @@
       },
       "WithdrawalStatus": {
         "type": "string",
-        "enum": [
-          "confirmed",
-          "pending"
-        ]
+        "enum": ["confirmed", "pending"]
       }
     }
   },
   "x-tagGroups": [
     {
       "name": "Public Endpoints",
-      "tags": [
-        "Assets",
-        "Markets",
-        "System",
-        "Trades"
-      ]
+      "tags": ["Assets", "Markets", "System", "Trades"]
     },
     {
       "name": "Authenticated Endpoints",
-      "tags": [
-        "Account",
-        "Capital",
-        "History",
-        "Order"
-      ]
+      "tags": ["Account", "Capital", "History", "Order"]
     },
     {
       "name": "Websocket",
-      "tags": [
-        "Streams"
-      ]
+      "tags": ["Streams"]
     }
   ]
 }

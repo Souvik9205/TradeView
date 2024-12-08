@@ -4,36 +4,37 @@ const app = express();
 
 const targetUrl = "https://api.backpack.exchange";
 
+// Middleware to handle CORS
 app.use((req, res, next) => {
-  const allowedOrigin = "https://marketview-rust.vercel.app";
-  res.header("Access-Control-Allow-Origin", allowedOrigin);
+  // Allow all origins
+  res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.header("Access-Control-Allow-Headers", "Content-Type, X-Requested-With");
   res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Expose-Headers", "Content-Length, Content-Range");
 
+  // Handle preflight OPTIONS requests
   if (req.method === "OPTIONS") {
-    // Handle preflight request
-    return res.status(204).send();
+    return res.sendStatus(204);
   }
   next();
 });
 
+// Proxy Middleware
 app.use(
   "/",
   createProxyMiddleware({
     target: targetUrl,
     changeOrigin: true,
     onProxyReq: (proxyReq, req, res) => {
-      proxyReq.setHeader("origin", "https://marketview-rust.vercel.app");
-      proxyReq.setHeader("Authorization", "Bearer <your-api-token>");
+      // Mimic requests from a specific origin if needed
+      proxyReq.setHeader("origin", req.headers.origin || "");
     },
     onProxyRes: (proxyRes, req, res) => {
       console.log("Proxy Response Headers:", proxyRes.headers);
     },
     onError: (err, req, res) => {
       console.error("Proxy Error:", err.message);
-      res.status(500).send("Proxy encountered an error.");
+      res.status(502).send("Bad Gateway: Proxy encountered an error.");
     },
   })
 );

@@ -1,12 +1,13 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware";
-import client from "@repo/db/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { OtpSchema, SigninSchema, SignupSchema } from "../types";
 import { JWT_SECRET } from "../config";
 import nodemailer from "nodemailer";
 
 export const authRouter = Router();
+const client = new Prisma.PrismaClient();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {

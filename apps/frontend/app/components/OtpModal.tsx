@@ -24,8 +24,7 @@ const OtpModal = ({
 }) => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const backendUrl = "http://localhost:3121";
-  // const backendUrl = "https://server-v7fg.onrender.com";
+  const backendUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   const login = useAuthStore((state) => state.login);
   const { toast } = useToast();
 

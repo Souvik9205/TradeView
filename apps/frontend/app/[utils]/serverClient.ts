@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:3121";
-// const BASE_URL = "https://server-v7fg.onrender.com";
+const BASE_URL = process.env.SERVER_URL;
 const user = localStorage.getItem("userId");
 const token = localStorage.getItem("token");
 

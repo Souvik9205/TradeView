@@ -1,18 +1,18 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
 import { OtpSchema, SigninSchema, SignupSchema } from "../types";
 import { JWT_SECRET } from "../config";
 import nodemailer from "nodemailer";
 
 export const authRouter = Router();
-const client = new Prisma.PrismaClient();
+const client = new PrismaClient();
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.NODEMAILER_USER || "souvikmukhopadhyay4@gmail.com",
-    pass: process.env.NODEMAILER_PASS || "ajpa cbms uvux alco",
+    user: process.env.NODEMAILER_USER,
+    pass: process.env.NODEMAILER_PASS,
   },
 });
 

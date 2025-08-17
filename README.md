@@ -1,81 +1,68 @@
-# Turborepo starter
+# TradeView
 
-This is an official starter Turborepo.
+TradeView is a comprehensive platform for visualizing, analyzing, and tracking financial trades. It provides interactive charts, real-time data, and portfolio management tools for traders and investors.
 
-## Using this example
+## Features
 
-Run the following command:
+- Real-time market data visualization
+- Interactive candlestick and line charts
+- Portfolio and trade tracking
+- Customizable technical indicators
+- User authentication and secure data storage
 
-```sh
-npx create-turbo@latest
-```
+## Installation
 
-## What's inside?
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/tradeview.git
+   cd tradeview
+   ```
+2. Install dependencies:
+   ```bash
+   pnpm install
+   ```
+3. Start the development server:
+   ```bash
+   pnpm start
+   ```
 
-This Turborepo includes the following packages/apps:
+## Usage
 
-### Apps and Packages
+- Register or log in to your account.
+- Add your trades and manage your portfolio.
+- Use the dashboard to analyze market trends and your performance.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+## Technologies Used
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+- React
+- Node.js / Express
+- MongoDB
+- Charting libraries (e.g., Chart.js, D3.js)
+- WebSocket for real-time updates
 
-### Utilities
+## API Integration
 
-This Turborepo has some additional tools already setup for you:
+TradeView integrates with the Backpack API to fetch real-time market data and execute trades securely.
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+## Running the Project
 
-### Build
+1. Start all services using Docker Compose:
+   ```bash
+   docker compose up
+   ```
+2. Set the database URL in `apps/server/.env`:
+   ```env
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5422/tradeview_db"
+   ```
+3. Run Prisma commands to set up the database:
+   ```bash
+   npx prisma generate && npx prisma migrate dev
+   ```
+4. Start all applications (frontend, proxy server, backend):
+   ```bash
+   pnpm dev
+   ```
 
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm build
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-pnpm dev
-```
-
-### Remote Caching
-
-Turborepo can use a technique known as [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup), then enter the following commands:
-
-```
-cd my-turborepo
-npx turbo login
-```
-
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-npx turbo link
-```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turbo.build/repo/docs/core-concepts/monorepos/running-tasks)
-- [Caching](https://turbo.build/repo/docs/core-concepts/caching)
-- [Remote Caching](https://turbo.build/repo/docs/core-concepts/remote-caching)
-- [Filtering](https://turbo.build/repo/docs/core-concepts/monorepos/filtering)
-- [Configuration Options](https://turbo.build/repo/docs/reference/configuration)
-- [CLI Usage](https://turbo.build/repo/docs/reference/command-line-reference)
+   - Frontend: [http://localhost:3000](http://localhost:3000)
+   - Proxy server: [http://localhost:3129](http://localhost:3129)
+   - Backend: [http://localhost:3121](http://localhost:3121)

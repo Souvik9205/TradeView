@@ -1,0 +1,20 @@
+# Backpack Proxy
+
+A simple proxy service.
+
+## Build Docker Image
+
+```bash
+docker build -t backpack-proxy .
+```
+
+## Run the Proxy Container
+
+```bash
+docker run -d -p 3129:3129 --name backpack-proxy backpack-proxy
+```
+
+## Notes
+
+- Ensure Docker is installed and running.
+- Update configuration as needed in the project files.

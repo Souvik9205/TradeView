@@ -27,8 +27,7 @@ export const Appbar = () => {
   const { isAuthenticated } = useAuthStore();
   const { toast } = useToast();
 
-  const backendUrl = "http://localhost:3121";
-  // const backendUrl = "https://server-v7fg.onrender.com";
+  const backendUrl = process.env.NEXT_PUBLIC_SERVER_URL;
   useEffect(() => {
     // Simulate checking auth status (Replace with actual implementation)
     const loadAuthStatus = async () => {

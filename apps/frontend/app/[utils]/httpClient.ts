@@ -1,9 +1,7 @@
 import axios from "axios";
 import { Depth, KLine, Ticker, Trade } from "./types";
 
-const BASE_URL = "http://localhost:3129/api/v1";
-// const BASE_URL = "https://proxyserver-dayq.onrender.com/api/v1";
-
+const BASE_URL = process.env.NEXT_PUBLIC_PROXY_URL;
 export async function getTicker(market: string): Promise<Ticker> {
   const tickers = await getTickers();
   const ticker = tickers.find((t) => t.symbol === market);

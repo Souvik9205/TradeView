@@ -58,9 +58,7 @@ const MarketsPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-  const proxyUrl = "http://localhost:3129/api/v1";
-  // const proxyUrl = "https://proxyserver-dayq.onrender.com/api/v1";
-
+  const proxyUrl = process.env.NEXT_PUBLIC_PROXY_URL;
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -180,7 +178,7 @@ const MarketsPage = () => {
                             className="w-6 h-6 md:w-8 md:h-8 rounded-full"
                             onError={(e) => {
                               (e.target as HTMLImageElement).src =
-                                "/market/default.png";
+                                "/market/blockchain.png";
                             }}
                           />
                           <div className="ml-1 md:ml-4">

@@ -44,8 +44,8 @@ const CryptoPage = () => {
   const login = useAuthStore((state) => state.login);
   const { toast } = useToast();
 
-  const backendUrl = "http://localhost:3121";
-  // const backendUrl = "https://server-v7fg.onrender.com";
+  const backendUrl = process.env.NEXT_PUBLIC_SERVER_URL;
+  const proxyUrl = process.env.NEXT_PUBLIC_PROXY_URL;
 
   const emailForm = useFormik({
     initialValues: {
@@ -118,7 +118,7 @@ const CryptoPage = () => {
   useEffect(() => {
     const fetchCryptocurrencyData = async () => {
       try {
-        const { data } = await axios.get(`${backendUrl}/tickers`);
+        const { data } = await axios.get(`${proxyUrl}/tickers`);
         const filteredData = CRYPTO_SYMBOLS.map((symbol) => {
           const coinData = data.find((item: any) => item.symbol === symbol);
           if (coinData) {
